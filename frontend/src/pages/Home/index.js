@@ -10,10 +10,10 @@ import {
   Center,
   Box,
   Highlight,
+  Container,
 } from '@chakra-ui/react';
-import { FaSignInAlt, FaUserAlt } from 'react-icons/fa';
 import { Helmet } from 'react-helmet-async';
-import logo from './logo.png';
+import graphics from './graphics.png';
 
 export default function Home({ history, user }) {
   // we can use "user" to access his/her username, profilepage, authenticated-status etc.
@@ -24,27 +24,30 @@ export default function Home({ history, user }) {
       <Helmet>
         <title>LexiAid</title>
       </Helmet>
-      <Flex
-        flexDirection='column'
+      <Container
+        // h='calc(100vh - 72px)'
+        d='flex'
         justifyContent='center'
-        alignItems='center'
-        p={{
-          base: '20px',
-          sm: '40px',
-          md: '50px',
+        flexDir='column'
+        maxW={{
+          base: 'container.sm',
+          sm: 'container.sm',
+          md: 'container.md',
+          lg: 'container.lg',
+          xl: 'container.xl',
         }}>
-        <Box>
+        <Box mt='2rem'>
           <Flex align='center'>
             <Image
-              src={logo}
-              alt='LexiAid Logo'
-              mr={4}
+              src={graphics}
+              alt='Graphics for LexiAid'
               w={{
                 base: '80px',
                 sm: '100px',
                 md: '120px',
                 lg: '300px',
               }}
+              mr={4}
             />
             <Heading
               as='h1'
@@ -56,7 +59,8 @@ export default function Home({ history, user }) {
                 xl: '120px',
               }}
               ml={4}>
-              Introducing LexiAid.
+              Introducing <br />
+              LexiAid.
             </Heading>
           </Flex>
           <Text
@@ -87,7 +91,6 @@ export default function Home({ history, user }) {
               alignContent='center'>
               <Link to='/login'>
                 <Button
-                  leftIcon={<FaSignInAlt />}
                   colorScheme='twitter'
                   variant='solid'
                   size={{ base: 'md', lg: 'lg' }}>
@@ -96,7 +99,6 @@ export default function Home({ history, user }) {
               </Link>
               <Link to='/register'>
                 <Button
-                  leftIcon={<FaUserAlt />}
                   colorScheme='twitter'
                   variant='solid'
                   size={{ base: 'md', lg: 'lg' }}>
@@ -106,7 +108,7 @@ export default function Home({ history, user }) {
             </ButtonGroup>
           </Center>
         </Box>
-      </Flex>
+      </Container>
     </>
   );
 }

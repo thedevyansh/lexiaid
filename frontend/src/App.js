@@ -10,6 +10,8 @@ import {
 } from './components/hoc/options';
 
 import Home from './pages/Home';
+import Login from './pages/Login';
+import Register from './pages/Register';
 import ErrorNotFound from './pages/ErrorNotFound';
 
 import Layout from './components/Layout';
@@ -28,6 +30,16 @@ function App() {
               path='/'
               exact
               component={withAuthorization(Home, PUBLIC_PAGE)}
+            />
+            <Route
+              path='/register'
+              exact
+              component={withAuthorization(Register, NON_LOGGED_ONLY)}
+            />
+            <Route
+              path='/login'
+              exact
+              component={withAuthorization(Login, NON_LOGGED_ONLY)}
             />
             <Route
               path='/'

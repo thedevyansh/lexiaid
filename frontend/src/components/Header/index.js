@@ -1,24 +1,21 @@
 import React from 'react';
 import LeftMenu from './sections/LeftMenu';
 import RightMenu from './sections/RightMenu';
-import { Container } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
 
 function Header() {
   return (
-    <Container
-      d='flex'
+    <Flex
       maxW='container.xl'
       justifyContent='space-between'
       position='sticky'
       zIndex='1'
       as='nav'
       alignItems='center'
-      flexWrap='wrap'
-      padding='1rem'
-      color='white'>
+      padding='1rem'>
       <LeftMenu />
       <RightMenu />
-    </Container>
+    </Flex>
   );
 }
 

@@ -1,18 +1,14 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Flex } from '@chakra-ui/react';
-import UserIcon from './UserIcon';
+import { Avatar } from '@chakra-ui/react';
 
 function RightMenu() {
-  const { authenticated, profilePicture } = useSelector(
-    state => state.user
-  );
+  const { authenticated, profilePicture } = useSelector(state => state.user);
 
-  return (
-    <Flex alignItems='center'>
-      <UserIcon isAuth={authenticated} image={profilePicture} />
-    </Flex>
-  );
+  if (authenticated) {
+    return <Avatar size='sm' bg='gray.800' src={profilePicture} />;
+  }
+  return null;
 }
 
 export default RightMenu;
