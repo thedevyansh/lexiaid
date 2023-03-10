@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "LexiAid",
+  "name": "LexiAid converts written content into a set of visual images that describe the material, providing a more accessible and intuitive way to understand and learn.",
   "icons": [
     {
       "src": "favicon.ico",
