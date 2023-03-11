@@ -1,19 +1,19 @@
 import re
 import json
 
-from flask import Blueprint, g, request, session, jsonify, Response
+from flask import Blueprint, g, request, session, jsonify
 from werkzeug.security import check_password_hash, generate_password_hash
 from bson.objectid import ObjectId
+from flask_cors import cross_origin
 
 from flaskbackend.db import get_db_client
 
-bp = Blueprint("auth", __name__, url_prefix="/api/auth")
+bp = Blueprint("auth", __name__, url_prefix="/auth")
 
 
 @bp.route("/", methods=["GET"])
+@cross_origin(supports_credentials=True)
 def auth():
-    print("PING from /api/auth route...")
-
     userId = session.get("userId", None)
 
     if userId is None:
@@ -33,10 +33,9 @@ def auth():
         return jsonify(user), 200
 
 
-@bp.post("/register")
+@bp.route("/register", methods=["POST"])
+@cross_origin(supports_credentials=True)
 def register():
-    print("PING from /api/auth/register route...")
-
     form_data = json.loads(request.data)
     username = form_data["username"]
     password = form_data["password"]
@@ -72,10 +71,9 @@ def register():
     return "Successfully logged in!", 200
 
 
-@bp.post("/login")
+@bp.route("/login", methods=["POST"])
+@cross_origin(supports_credentials=True)
 def login():
-    print("PING from /api/auth/login route...")
-
     form_data = json.loads(request.data)
     username = form_data["username"]
     password = form_data["password"]
@@ -95,12 +93,13 @@ def login():
     if error is None:
         session.clear()
         session["userId"] = str(user["_id"])
-        return jsonify({"message": "Successfully logged in!"}), 200
+        return "Successfully logged in!", 200
 
-    return jsonify({"error": error}), 401
+    return error, 401
 
 
-@bp.post("/logout")
+@bp.route("/logout", methods=["POST"])
+@cross_origin(supports_credentials=True)
 def logout():
     session.clear()
     return jsonify({"message": "Logged out successfully"}), 200

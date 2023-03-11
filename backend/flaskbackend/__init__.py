@@ -1,13 +1,12 @@
 import os
 
 from flask import Flask
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
-
-    CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}}, supports_credentials=True)
+    CORS(app, supports_credentials=True)
 
     app.config.from_mapping(
         SECRET_KEY="dev",  # for production, generate secret key using OS cryptographic random generator.
@@ -25,9 +24,10 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    @app.route("/ping")
+    @app.route("/")
+    @cross_origin(supports_credentials=True)
     def ping():
-        return "Ping successful: LexiAid Flask Server"
+        return "Ping from LexiAid Flask Server."
 
     from . import db
     db.init_app(app)
