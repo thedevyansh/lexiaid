@@ -4,7 +4,7 @@ export const config = {
   initialColorMode: 'light',
   useSystemColorMode: false,
   fonts: {
-    heading: `Inter, ${base.fonts?.heading}`,
+    heading: `Poppins, ${base.fonts?.heading}`,
     body: `Inter, ${base.fonts?.body}`,
   },
   styles: {

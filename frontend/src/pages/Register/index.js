@@ -82,7 +82,7 @@ function Register() {
           title: 'Registration error',
           description: res?.error?.message ?? 'Please try again',
           status: 'error',
-          duration: 2000,
+          duration: 4000,
         });
       } else if (res.type === 'user/register/fulfilled') {
         window.location.reload();

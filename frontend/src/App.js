@@ -12,11 +12,14 @@ import {
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import LearningArea from './pages/LearningArea';
 import ErrorNotFound from './pages/ErrorNotFound';
 
 import Layout from './components/Layout';
 import withAuthorization from './components/hoc/withAuthorization';
 
+import '@fontsource/poppins/400.css';
+import '@fontsource/poppins/600.css';
 import '@fontsource/inter/400.css';
 import '@fontsource/inter/700.css';
 
@@ -40,6 +43,11 @@ function App() {
               path='/login'
               exact
               component={withAuthorization(Login, NON_LOGGED_ONLY)}
+            />
+            <Route
+              path='/learningarea/me'
+              exact
+              component={withAuthorization(LearningArea, LOGGED_IN_ONLY)}
             />
             <Route
               path='/'

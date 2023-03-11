@@ -1,11 +1,17 @@
 import React from 'react';
 import { Center } from '@chakra-ui/react';
-import { Grid } from 'react-loader-spinner';
+import { RotatingLines } from 'react-loader-spinner';
 
 function LoadingView() {
   return (
     <Center h='65vh'>
-      <Grid color='#90CCF4' height={40} width={40} />
+      <RotatingLines
+        strokeColor='#36B6FF'
+        strokeWidth='4'
+        animationDuration='0.75'
+        width='40'
+        visible={true}
+      />
     </Center>
   );
 }
