@@ -9,17 +9,17 @@ const instance = axios.create({
 });
 
 export const auth = () => {
-  return instance.get('/api/auth');
+  return instance.get('/auth');
 };
 
 export const login = request => {
-  return instance.post('/api/auth/login', request);
+  return instance.post('/auth/login', request);
 };
 
 export const register = request => {
-  return instance.post('/api/auth/register', request);
+  return instance.post('/auth/register', request);
 };
 
 export const logout = () => {
-  return instance.post('/api/auth/logout');
+  return instance.post('/auth/logout');
 };
