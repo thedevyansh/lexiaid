@@ -17,6 +17,8 @@ import {
   Stack,
   Text,
   useToast,
+  Flex,
+  Divider,
 } from '@chakra-ui/react';
 import { Helmet } from 'react-helmet-async';
 import { Link as ReactLink } from 'react-router-dom';
@@ -59,7 +61,7 @@ function Login() {
 
   return (
     <>
-      <Helmet>  
+      <Helmet>
         <title>Login - LexiAid</title>
       </Helmet>
       <Box maxW='md' mx='auto' py='2rem'>
@@ -118,6 +120,13 @@ function Login() {
               Sign up
             </Link>
           </Text>
+          <Flex align='center'>
+            <Divider />
+            <Text padding='4' fontSize='xs'>
+              OR
+            </Text>
+            <Divider />
+          </Flex>
           <LoginWithGoogle />
         </Box>
       </Box>

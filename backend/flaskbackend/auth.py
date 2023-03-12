@@ -1,11 +1,19 @@
 import re
 import json
 
-from flask import Blueprint, g, request, session, jsonify
+from flask import (
+    Blueprint,
+    g,
+    request,
+    session,
+    current_app,
+    url_for,
+    jsonify,
+    render_template_string,
+)
 from werkzeug.security import check_password_hash, generate_password_hash
 from bson.objectid import ObjectId
 from flask_cors import cross_origin
-
 from flaskbackend.db import get_db_client
 
 bp = Blueprint("auth", __name__, url_prefix="/auth")
@@ -103,3 +111,63 @@ def login():
 def logout():
     session.clear()
     return jsonify({"message": "Logged out successfully"}), 200
+
+
+@bp.route("/google", methods=["GET"])
+@cross_origin(supports_credentials=True)
+def google_login():
+    GOOGLE_CLIENT_ID = current_app.config["GOOGLE_CLIENT_ID"]
+    GOOGLE_CLIENT_SECRET = current_app.config["GOOGLE_CLIENT_SECRET"]
+
+    CONF_URL = "https://accounts.google.com/.well-known/openid-configuration"
+    oauth = current_app.oauth
+    oauth.register(
+        name="google",
+        client_id=GOOGLE_CLIENT_ID,
+        client_secret=GOOGLE_CLIENT_SECRET,
+        server_metadata_url=CONF_URL,
+        client_kwargs={"scope": "openid email profile"},
+    )
+
+    redirect_uri = url_for("auth.google_login_callback", _external=True)
+    return oauth.google.authorize_redirect(redirect_uri)
+
+
+@bp.route("/google/callback", methods=["GET"])
+@cross_origin(supports_credentials=True)
+def google_login_callback():
+    oauth = current_app.oauth
+    token = oauth.google.authorize_access_token()
+
+    user = token["userinfo"]
+
+    googleName = user["name"]
+    username = user["given_name"] + user["email"]
+    password = user["nonce"]
+    pfp = user["picture"]
+
+    client = get_db_client()
+    users = client["users"]
+    users_collection = users["users_collection"]
+    user = users_collection.find_one({"username": username})
+
+    if not user:
+        users_collection.insert_one(
+            {
+                "username": username,
+                "password": generate_password_hash(password),
+                "profilePicture": pfp,
+                "googleName": googleName,
+            }
+        )
+
+        user = users_collection.find_one({"username": username})
+
+    session["userId"] = str(user["_id"])
+    return render_template_string(
+        """
+        <script>
+            window.location.href = "http://localhost:3000";
+        </script>
+    """
+    )

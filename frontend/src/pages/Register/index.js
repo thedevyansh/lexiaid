@@ -17,6 +17,8 @@ import {
   Stack,
   Text,
   useToast,
+  Divider,
+  Flex
 } from '@chakra-ui/react';
 import { Helmet } from 'react-helmet-async';
 import { Link as ReactLink } from 'react-router-dom';
@@ -178,6 +180,13 @@ function Register() {
               Log in
             </Link>
           </Text>
+          <Flex align='center'>
+            <Divider />
+            <Text padding='4' fontSize='xs'>
+              OR
+            </Text>
+            <Divider />
+          </Flex>
           <LoginWithGoogle />
         </Box>
       </Box>

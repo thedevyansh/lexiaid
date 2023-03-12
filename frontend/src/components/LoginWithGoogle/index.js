@@ -4,12 +4,12 @@ import './buttonStyle.css';
 
 const URI =
   !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
-    ? 'http://localhost:5000/api/auth/google'
-    : 'https://lexiaid.herokuapp.com/api/auth/google';
+    ? 'http://localhost:5000/auth/google'
+    : 'https://lexiaid.herokuapp.com/auth/google';
 
 function LoginWithGoogle() {
   return (
-    <Box align='center' mt='30px'>
+    <Box align='center' mt={2}>
       <div
         className='google-btn'
         onClick={() => {

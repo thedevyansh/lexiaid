@@ -2,17 +2,21 @@ import os
 
 from flask import Flask
 from flask_cors import CORS, cross_origin
+from authlib.integrations.flask_client import OAuth
 
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     CORS(app, supports_credentials=True)
+    oauth = OAuth(app)
 
     app.config.from_mapping(
         SECRET_KEY="dev",  # for production, generate secret key using OS cryptographic random generator.
         DATABASE_HOST="localhost",
         DATABASE_PORT=27017,
     )
+
+    app.oauth = oauth
 
     if test_config is None:
         app.config.from_pyfile("config.py", silent=True)

@@ -13,8 +13,8 @@ function RightMenu() {
 
   if (authenticated) {
     return (
-      <HStack spacing={4}>
-        <Avatar size='sm' bg='gray.800' src={profilePicture} />
+      <HStack spacing={6}>
+        <Avatar size={{'base': 'sm', 'md': 'md'}} bg='gray.800' src={profilePicture} />
         <Button
           colorScheme='red'
           variant='outline'
