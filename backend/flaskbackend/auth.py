@@ -33,12 +33,15 @@ def auth():
         users_collection = users["users_collection"]
         user = users_collection.find_one({"_id": ObjectId(userId)})
 
-        g.user = user
+        if user:
+            g.user = user
+            del user["_id"]
+            del user["password"]
 
-        del user["_id"]
-        del user["password"]
+            return jsonify(user), 200
 
-        return jsonify(user), 200
+        g.user = None
+        return "Unauthorized", 401
 
 
 @bp.route("/register", methods=["POST"])

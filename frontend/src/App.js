@@ -45,7 +45,7 @@ function App() {
               component={withAuthorization(Login, NON_LOGGED_ONLY)}
             />
             <Route
-              path='/learningarea/me'
+              path='/learningarea'
               exact
               component={withAuthorization(LearningArea, LOGGED_IN_ONLY)}
             />

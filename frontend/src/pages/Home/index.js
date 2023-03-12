@@ -16,6 +16,11 @@ import { Helmet } from 'react-helmet-async';
 import graphics from './graphics.png';
 import { useSelector } from 'react-redux';
 
+const URI =
+  !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
+    ? 'http://localhost:3000/learningarea'
+    : 'https://lexiaid.netlify.com/learningarea';
+
 export default function Home({ history, user }) {
   // we can use "user" to access his/her username, profilepage, authenticated-status etc.
   // usage: user?.authenticated, user?.username, ...
@@ -87,15 +92,16 @@ export default function Home({ history, user }) {
           </Text>
           <Center>
             {authenticated && (
-              <Link to='/learningarea/me'>
-                <Button
-                  colorScheme='twitter'
-                  variant='solid'
-                  mt='30px'
-                  size={{ base: 'md', lg: 'lg' }}>
-                  Start learning
-                </Button>
-              </Link>
+              <Button
+                colorScheme='twitter'
+                variant='solid'
+                mt='30px'
+                size={{ base: 'md', lg: 'lg' }}
+                onClick={() => {
+                  window.open(URI, '_self');
+                }}>
+                Start learning
+              </Button>
             )}
 
             {!authenticated && (
