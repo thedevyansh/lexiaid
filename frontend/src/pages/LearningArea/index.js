@@ -1,16 +1,35 @@
-import React from 'react';
-import { Helmet } from 'react-helmet-async';
-import { Box, Text } from '@chakra-ui/react';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { Box, useBreakpointValue } from '@chakra-ui/react';
 
-function LearningArea() {
+import Sidebar from '../../components/Sidebar';
+import PromptArea from '../../components/PromptArea';
+
+const smVariant = { navigation: 'drawer', navigationButton: true };
+const mdVariant = { navigation: 'sidebar', navigationButton: false };
+
+export default function App() {
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const variants = useBreakpointValue({ base: smVariant, md: mdVariant });
+
+  const user = useSelector(state => state.user)
+
+  const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
+
   return (
-    <Box>
-      <Helmet>
-        <title>Learning Area - LexiAid</title>
-      </Helmet>
-      <Text>Learning Area...</Text>
-    </Box>
+    <>
+      <Sidebar
+        variant={variants?.navigation}
+        isOpen={isSidebarOpen}
+        onClose={toggleSidebar}
+        user={user}
+      />
+      <Box ml={!variants?.navigationButton && 320}>
+        <PromptArea
+          showSidebarButton={variants?.navigationButton}
+          onShowSidebar={toggleSidebar}
+        />
+      </Box>
+    </>
   );
 }
-
-export default LearningArea;

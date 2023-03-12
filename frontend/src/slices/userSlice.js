@@ -4,6 +4,7 @@ import * as userApi from '../services/user';
 const initialState = {
   username: '',
   profilePicture: '',
+  googleName: null,
   authenticated: false,
   status: 'idle',
 };
@@ -44,6 +45,7 @@ export const userSlice = createSlice({
       state.authenticated = true;
       state.username = payload.username;
       state.profilePicture = payload.profilePicture;
+      state.googleName = payload.googleName ?? null;
     },
     [authenticate.rejected]: state => {
       state.status = 'failed';
@@ -53,6 +55,7 @@ export const userSlice = createSlice({
       state.authenticated = false;
       state.username = '';
       state.profilePicture = '';
+      state.googleName = null;
     },
   },
 });
