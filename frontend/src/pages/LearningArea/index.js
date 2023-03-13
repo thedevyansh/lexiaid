@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Box, useBreakpointValue } from '@chakra-ui/react';
+import { useBreakpointValue } from '@chakra-ui/react';
 
 import Sidebar from '../../components/Sidebar';
 import PromptArea from '../../components/PromptArea';
@@ -12,7 +12,7 @@ export default function App() {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const variants = useBreakpointValue({ base: smVariant, md: mdVariant });
 
-  const user = useSelector(state => state.user)
+  const user = useSelector(state => state.user);
 
   const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
 
@@ -24,12 +24,10 @@ export default function App() {
         onClose={toggleSidebar}
         user={user}
       />
-      <Box ml={!variants?.navigationButton && 320}>
-        <PromptArea
-          showSidebarButton={variants?.navigationButton}
-          onShowSidebar={toggleSidebar}
-        />
-      </Box>
+      <PromptArea
+        showSidebarButton={variants?.navigationButton}
+        onShowSidebar={toggleSidebar}
+      />
     </>
   );
 }

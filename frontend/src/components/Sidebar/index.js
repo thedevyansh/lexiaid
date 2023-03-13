@@ -8,48 +8,73 @@ import {
   DrawerBody,
   DrawerContent,
   Flex,
-  Spacer,
   VStack,
   Avatar,
   Text,
-  Heading,
 } from '@chakra-ui/react';
-import { AiOutlineHome } from 'react-icons/ai';
+import { useDispatch } from 'react-redux';
+import { BiHomeAlt2 } from 'react-icons/bi';
+import { FiLogOut } from 'react-icons/fi';
+
+import { logout } from '../../slices/userSlice';
 
 const URI =
   !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
     ? 'http://localhost:3000'
     : 'https://lexiaid.netlify.com';
 
-const SidebarContent = ({ user }) => (
+const SidebarContent = ({ handleLogout, user }) => (
   <>
-    <Button
-      leftIcon={<AiOutlineHome />}
-      variant='ghost'
-      _hover={{ bg: 'gray.700' }}
-      onClick={() => {
-        window.open(URI, '_self');
-      }}>
-      Home
-    </Button>
+    <Box>
+      <Button
+        leftIcon={<BiHomeAlt2 />}
+        variant='ghost'
+        _hover={{ bg: 'gray.700' }}
+        onClick={() => {
+          window.open(URI, '_self');
+        }}>
+        Home
+      </Button>
+    </Box>
 
-    <Flex direction='column' align='center' justify='center'>
-      <VStack spacing={4} align='center'>
+    <Flex direction='column' align='center' flex='1' rowGap={3}>
+      <VStack spacing={4}>
         <Avatar
-          size={{ base: 'md', md: 'xl' }}
+          size={{ base: 'lg', md: 'xl' }}
           bg='gray.700'
-          mt={4}
           src={user.profilePicture}
         />
-        <Text fontSize='lg'>{user.googleName ?? user.username}</Text>
+        <Text fontSize={{ base: 'lg', md: 'xl' }} fontWeight='bold'>
+          {user.googleName ?? user.username}
+        </Text>
       </VStack>
+      <Box flex='1'></Box>
+      <Box>
+        <Button
+          color='red.300'
+          w='max-content'
+          leftIcon={<FiLogOut />}
+          variant='ghose'
+          _hover={{ bg: 'gray.700' }}
+          onClick={handleLogout}>
+          Log out
+        </Button>
+      </Box>
     </Flex>
   </>
 );
 
 const Sidebar = ({ isOpen, variant, onClose, user }) => {
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    dispatch(logout());
+  };
+
   return variant === 'sidebar' ? (
     <Box
+      display='flex'
+      flexDirection='column'
       color='gray.200'
       position='fixed'
       left={0}
@@ -58,16 +83,18 @@ const Sidebar = ({ isOpen, variant, onClose, user }) => {
       top={0}
       h='100%'
       bg='#1A202C'>
-      <SidebarContent user={user} />
+      <SidebarContent user={user} handleLogout={handleLogout} />
     </Box>
   ) : (
     <Drawer isOpen={isOpen} placement='left' onClose={onClose}>
       <DrawerOverlay>
-        <DrawerContent>
+        <DrawerContent bg='#1A202C' color='gray.200'>
           <DrawerCloseButton />
           <DrawerHeader>LexiAid</DrawerHeader>
           <DrawerBody>
-            <SidebarContent user={user} />
+            <Box display='flex' flexDirection='column' height='100%'>
+              <SidebarContent user={user} handleLogout={handleLogout} />
+            </Box>
           </DrawerBody>
         </DrawerContent>
       </DrawerOverlay>
