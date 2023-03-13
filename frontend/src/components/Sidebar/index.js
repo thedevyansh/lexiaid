@@ -11,6 +11,7 @@ import {
   VStack,
   Avatar,
   Text,
+  Divider,
 } from '@chakra-ui/react';
 import { useDispatch } from 'react-redux';
 import { BiHomeAlt2 } from 'react-icons/bi';
@@ -43,18 +44,21 @@ const SidebarContent = ({ handleLogout, user }) => (
           size={{ base: 'lg', md: 'xl' }}
           bg='gray.700'
           src={user.profilePicture}
+          mt={4}
         />
         <Text fontSize={{ base: 'lg', md: 'xl' }} fontWeight='bold'>
           {user.googleName ?? user.username}
         </Text>
       </VStack>
+      <Divider />
       <Box flex='1'></Box>
+      <Divider />
       <Box>
         <Button
-          color='red.300'
+          colorScheme='red'
           w='max-content'
           leftIcon={<FiLogOut />}
-          variant='ghose'
+          variant='outline'
           _hover={{ bg: 'gray.700' }}
           onClick={handleLogout}>
           Log out
@@ -76,12 +80,9 @@ const Sidebar = ({ isOpen, variant, onClose, user }) => {
       display='flex'
       flexDirection='column'
       color='gray.200'
-      position='fixed'
-      left={0}
       p={5}
       w='320px'
-      top={0}
-      h='100%'
+      h='100vh'
       bg='#1A202C'>
       <SidebarContent user={user} handleLogout={handleLogout} />
     </Box>

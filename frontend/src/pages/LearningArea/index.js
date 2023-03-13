@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useBreakpointValue } from '@chakra-ui/react';
+import { Flex, useBreakpointValue } from '@chakra-ui/react';
 
 import Sidebar from '../../components/Sidebar';
 import PromptArea from '../../components/PromptArea';
@@ -17,7 +17,7 @@ export default function App() {
   const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
 
   return (
-    <>
+    <Flex h='100vh'>
       <Sidebar
         variant={variants?.navigation}
         isOpen={isSidebarOpen}
@@ -28,6 +28,6 @@ export default function App() {
         showSidebarButton={variants?.navigationButton}
         onShowSidebar={toggleSidebar}
       />
-    </>
+    </Flex>
   );
 }

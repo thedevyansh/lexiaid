@@ -4,7 +4,7 @@ import logo from './logo.png';
 
 const PromptAreaHeader = ({ showSidebarButton = true, onShowSidebar }) => {
   return (
-    <Flex p={4} justifyContent='center'>
+    <Flex justifyContent='center'>
       <Box flex='1'>
         {showSidebarButton && (
           <IconButton
