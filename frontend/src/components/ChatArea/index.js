@@ -5,7 +5,7 @@ import ModelResponse from '../ModelResponse';
 
 function ChatArea({ pfp }) {
   return (
-    <VStack align='stretch' flex={1} overflow='auto' mx={10} my={4} spacing={6}>
+    <VStack align='stretch' flex={1} overflow='auto' mx={{'lg': 10}} my={4} spacing={6}>
       <UserPrompt pfp={pfp} />
       <ModelResponse />
     </VStack>

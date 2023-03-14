@@ -11,9 +11,7 @@ function ModelResponse() {
         src={logo}
         fallbackSrc='https://via.placeholder.com/35'
       />
-      
-        <CarouselResponse />
-      
+      <CarouselResponse />
     </Flex>
   );
 }
