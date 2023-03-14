@@ -1,4 +1,5 @@
 import React from 'react';
+import { Image } from '@chakra-ui/react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 import 'swiper/css';
@@ -9,19 +10,25 @@ import './styles.css';
 
 import { Navigation, Pagination } from 'swiper';
 
-function CarouselResponse({modelResponse}) {
+function CarouselResponse({ modelResponse }) {
+  const pagination = {
+    clickable: true,
+    renderBullet: function (index, className) {
+      return '<span class="' + className + '">' + (index + 1) + "</span>";
+    },
+  };
+
   return (
     <Swiper
-      pagination={{
-        type: 'fraction',
-      }}
+      pagination={pagination}
       navigation={true}
       modules={[Pagination, Navigation]}
       className='mySwiper'>
-      <SwiperSlide>Image 1</SwiperSlide>
-      <SwiperSlide>Image 2</SwiperSlide>
-      <SwiperSlide>Image 3</SwiperSlide>
-      <SwiperSlide>Image 4</SwiperSlide>
+      {modelResponse.map((image, index) => (
+        <SwiperSlide key={index}>
+          <Image src={image} />
+        </SwiperSlide>
+      ))}
     </Swiper>
   );
 }

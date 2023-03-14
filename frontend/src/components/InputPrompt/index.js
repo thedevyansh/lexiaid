@@ -10,8 +10,17 @@ import { FaPaperPlane } from 'react-icons/fa';
 import { FiUpload } from 'react-icons/fi';
 import axios from 'axios';
 
+const instance = axios.create({
+  baseURL:
+    !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
+      ? 'http://localhost:5000'
+      : 'https://lexiaid.herokuapp.com',
+  withCredentials: true,
+});
+
 function InputPrompt({ setPrompts, setModelResponses }) {
   const [prompt, setPrompt] = useState('');
+  const [btnDisabled, setBtnDisabled] = useState(false);
 
   const handleKeyDown = e => {
     if (e.key === 'Enter') {
@@ -21,14 +30,24 @@ function InputPrompt({ setPrompts, setModelResponses }) {
 
   async function handleSubmitPrompt() {
     if (prompt !== '') {
+      const request = {
+        user_prompt: prompt,
+      };
       setPrompts(prevPrompts => [...prevPrompts, prompt]);
       setPrompt('');
+      setBtnDisabled(true);
 
-      setModelResponses(prevModelResponses => [...prevModelResponses, ['1', '2', '3']])
+      const response = await instance.post(
+        'http://localhost:5000/service/new_ttf',
+        request
+      );
 
-      console.log('Message sent to server...');
-      
-      // call the api to fetch dummy data and call setModelResponse() on that data
+      setModelResponses(prevModelResponses => [
+        ...prevModelResponses,
+        response.data.images,
+      ]);
+
+      setBtnDisabled(false);
     }
   }
 
@@ -36,6 +55,7 @@ function InputPrompt({ setPrompts, setModelResponses }) {
     <Flex mt={4} align='center'>
       <InputGroup size='lg' borderColor='gray.400'>
         <Input
+          isDisabled={btnDisabled}
           placeholder='Input the prompt here.'
           value={prompt}
           onKeyDown={handleKeyDown}
@@ -43,6 +63,7 @@ function InputPrompt({ setPrompts, setModelResponses }) {
         />
         <InputRightElement>
           <IconButton
+            isDisabled={btnDisabled}
             colorScheme='twitter'
             aria-label='Send Message'
             icon={<FaPaperPlane />}
