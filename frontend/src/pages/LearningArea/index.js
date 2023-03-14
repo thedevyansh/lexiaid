@@ -27,6 +27,7 @@ export default function App() {
       <PromptArea
         showSidebarButton={variants?.navigationButton}
         onShowSidebar={toggleSidebar}
+        pfp={user.profilePicture}
       />
     </Flex>
   );

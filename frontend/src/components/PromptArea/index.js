@@ -3,7 +3,7 @@ import PromptAreaHeader from '../PromptAreaHeader';
 import ChatArea from '../ChatArea';
 import InputPrompt from '../InputPrompt';
 
-const PromptArea = ({ showSidebarButton = true, onShowSidebar }) => {
+const PromptArea = ({ showSidebarButton = true, onShowSidebar, pfp }) => {
   return (
     <Box h='100vh' display='flex' flexDirection='column' flex='1' p={4}>
       <PromptAreaHeader
@@ -17,7 +17,7 @@ const PromptArea = ({ showSidebarButton = true, onShowSidebar }) => {
         </Text>
         <Divider />
       </Flex>
-      <ChatArea />
+      <ChatArea pfp={pfp}/>
       <InputPrompt />
     </Box>
   );
