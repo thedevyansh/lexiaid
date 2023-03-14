@@ -6,7 +6,6 @@ import { Flex } from '@chakra-ui/react';
 function Header() {
   return (
     <Flex
-      maxW='container.xl'
       justifyContent='space-between'
       position='sticky'
       zIndex='1'

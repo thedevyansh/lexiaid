@@ -1,9 +1,13 @@
+import React, { useState } from 'react';
 import { Box, Divider, Flex, Text } from '@chakra-ui/react';
 import PromptAreaHeader from '../PromptAreaHeader';
 import ChatArea from '../ChatArea';
 import InputPrompt from '../InputPrompt';
 
-const PromptArea = ({ showSidebarButton = true, onShowSidebar }) => {
+const PromptArea = ({ showSidebarButton = true, onShowSidebar, pfp }) => {
+  const [prompts, setPrompts] = useState([]);
+  const [modelResponses, setModelResponses] = useState([])
+
   return (
     <Box h='100vh' display='flex' flexDirection='column' flex='1' p={4}>
       <PromptAreaHeader
@@ -17,8 +21,8 @@ const PromptArea = ({ showSidebarButton = true, onShowSidebar }) => {
         </Text>
         <Divider />
       </Flex>
-      <ChatArea />
-      <InputPrompt />
+      <ChatArea pfp={pfp} prompts={prompts} modelResponses={modelResponses} />
+      <InputPrompt setPrompts={setPrompts} setModelResponses={setModelResponses} />
     </Box>
   );
 };
