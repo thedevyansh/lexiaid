@@ -39,4 +39,7 @@ def create_app(test_config=None):
     from . import auth
     app.register_blueprint(auth.bp)
 
+    from . import service
+    app.register_blueprint(service.bp)
+
     return app
