@@ -1,7 +1,7 @@
 import { Box, Divider, Flex, Text } from '@chakra-ui/react';
 import PromptAreaHeader from '../PromptAreaHeader';
 import ChatArea from '../ChatArea';
-import InputBox from '../InputBox';
+import InputPrompt from '../InputPrompt';
 
 const PromptArea = ({ showSidebarButton = true, onShowSidebar }) => {
   return (
@@ -18,7 +18,7 @@ const PromptArea = ({ showSidebarButton = true, onShowSidebar }) => {
         <Divider />
       </Flex>
       <ChatArea />
-      <InputBox />
+      <InputPrompt />
     </Box>
   );
 };

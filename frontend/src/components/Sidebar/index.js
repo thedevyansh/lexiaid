@@ -7,11 +7,11 @@ import {
   DrawerHeader,
   DrawerBody,
   DrawerContent,
-  Flex,
   VStack,
   Avatar,
   Text,
   Divider,
+  Center,
 } from '@chakra-ui/react';
 import { useDispatch } from 'react-redux';
 import { BiHomeAlt2 } from 'react-icons/bi';
@@ -26,45 +26,45 @@ const URI =
 
 const SidebarContent = ({ handleLogout, user }) => (
   <>
-    <Box>
-      <Button
-        leftIcon={<BiHomeAlt2 />}
-        variant='ghost'
-        _hover={{ bg: 'gray.700' }}
-        onClick={() => {
-          window.open(URI, '_self');
-        }}>
-        Home
-      </Button>
-    </Box>
+    <Button
+      leftIcon={<BiHomeAlt2 />}
+      variant='ghost'
+      _hover={{ bg: 'gray.700' }}
+      w='max-content'
+      onClick={() => {
+        window.open(URI, '_self');
+      }}>
+      Home
+    </Button>
 
-    <Flex direction='column' align='center' flex='1' rowGap={3}>
-      <VStack spacing={4}>
-        <Avatar
-          size={{ base: 'lg', md: 'xl' }}
-          bg='gray.700'
-          src={user.profilePicture}
-          mt={4}
-        />
-        <Text fontSize={{ base: 'lg', md: 'xl' }} fontWeight='bold'>
-          {user.googleName ?? user.username}
-        </Text>
-      </VStack>
-      <Divider />
-      <Box flex='1'></Box>
-      <Divider />
-      <Box>
-        <Button
-          colorScheme='red'
-          w='max-content'
-          leftIcon={<FiLogOut />}
-          variant='outline'
-          _hover={{ bg: 'gray.700' }}
-          onClick={handleLogout}>
-          Log out
-        </Button>
-      </Box>
-    </Flex>
+    <VStack spacing={4}>
+      <Avatar
+        size={{ base: 'lg', md: 'xl' }}
+        bg='gray.700'
+        src={user.profilePicture}
+        mt={4}
+      />
+      <Text fontSize={{ base: 'lg', md: 'xl' }} fontWeight='bold'>
+        {user.googleName ?? user.username}
+      </Text>
+    </VStack>
+
+    <Divider />
+    <Box flex='1' overflow='auto'></Box>
+
+    <Divider />
+
+    <Center>
+      <Button
+        colorScheme='red'
+        w='max-content'
+        leftIcon={<FiLogOut />}
+        variant='outline'
+        _hover={{ bg: 'gray.700' }}
+        onClick={handleLogout}>
+        Log out
+      </Button>
+    </Center>
   </>
 );
 
@@ -79,6 +79,7 @@ const Sidebar = ({ isOpen, variant, onClose, user }) => {
     <Box
       display='flex'
       flexDirection='column'
+      rowGap={4}
       color='gray.200'
       p={5}
       w='320px'
@@ -93,7 +94,7 @@ const Sidebar = ({ isOpen, variant, onClose, user }) => {
           <DrawerCloseButton />
           <DrawerHeader>LexiAid</DrawerHeader>
           <DrawerBody>
-            <Box display='flex' flexDirection='column' height='100%'>
+            <Box display='flex' flexDirection='column' height='100%' rowGap={4}>
               <SidebarContent user={user} handleLogout={handleLogout} />
             </Box>
           </DrawerBody>
