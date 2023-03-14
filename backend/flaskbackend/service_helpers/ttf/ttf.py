@@ -14,7 +14,7 @@ def process(ip_text):
     }
         return op
     
-    op["sentences"]=["sample sentence"]
-    op["images"]=["sample image"]
+    op["sentences"]=["Urbanization and deforestation increase the risk of wildfires.","Climate change is affecting the timing and distribution of seasonal events.","Acid rain damages soil."]
+    op["images"]=["https://news.climate.columbia.edu/wp-content/uploads/2014/10/Deerfire_-600x370.jpg","https://climateknowledgeportal.worldbank.org//sites/default/files/inline-images/Fig2.jpg","https://images.interestingengineering.com/1200x675/img/iea/Xm6lqlZ1wD/acid-rain-header.jpg"]
 
     return op
