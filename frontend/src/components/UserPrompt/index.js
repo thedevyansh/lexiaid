@@ -1,6 +1,6 @@
 import { Flex, Image, Text } from '@chakra-ui/react';
 
-function UserPrompt({ pfp }) {
+function UserPrompt({ prompt, pfp }) {
   return (
     <Flex columnGap={4}>
       <Image
@@ -9,11 +9,7 @@ function UserPrompt({ pfp }) {
         src={pfp}
         fallbackSrc='https://via.placeholder.com/35'
       />
-      <Text flex='1'>
-        The water cycle is often taught as a simple circular cycle of
-        evaporation, condensation, and precipitation. Although this can be a
-        useful model, the reality is much more complicated.
-      </Text>
+      <Text flex='1'>{prompt}</Text>
     </Flex>
   );
 }

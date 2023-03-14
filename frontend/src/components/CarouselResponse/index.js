@@ -9,7 +9,7 @@ import './styles.css';
 
 import { Navigation, Pagination } from 'swiper';
 
-function CarouselResponse() {
+function CarouselResponse({modelResponse}) {
   return (
     <Swiper
       pagination={{

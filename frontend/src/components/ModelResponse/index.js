@@ -2,7 +2,7 @@ import { Flex, Image, Box } from '@chakra-ui/react';
 import CarouselResponse from '../CarouselResponse';
 import logo from './logo.png';
 
-function ModelResponse() {
+function ModelResponse({modelResponse}) {
   return (
     <Flex columnGap={4}>
       <Image
@@ -11,7 +11,7 @@ function ModelResponse() {
         src={logo}
         fallbackSrc='https://via.placeholder.com/35'
       />
-      <CarouselResponse />
+      {/* <CarouselResponse modelResponse={modelResponse} /> */}
     </Flex>
   );
 }
