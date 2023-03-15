@@ -44,7 +44,7 @@ function InputPrompt({ setPrompts, setModelResponses }) {
 
       setModelResponses(prevModelResponses => [
         ...prevModelResponses,
-        response.data.images,
+        { images: response.data.images, sentences: response.data.sentences },
       ]);
 
       setBtnDisabled(false);
