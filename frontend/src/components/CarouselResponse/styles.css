@@ -19,7 +19,15 @@
 
 .mySwiper {
   flex: 1;
-  border: 1px solid #d4dbe4;
+  border: 1px solid #c4cbd3;
   height: 400px;
   width: 200px;
+}
+
+.swiperImgSentence {
+  position: absolute;
+  color: white;
+  background-color: black;
+  bottom: 20px;
+  padding: 2px 6px;
 }
