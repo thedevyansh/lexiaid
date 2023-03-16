@@ -52,8 +52,11 @@ function InputPrompt({ setPrompts, setModelResponses }) {
   }
 
   return (
-    <Flex mt={4} align='center'>
-      <InputGroup size='lg' borderColor='gray.400'>
+    <Flex mt={4} align='center' justify='center'>
+      <InputGroup
+        size='lg'
+        borderColor='gray.400'
+        width={{ base: '100%', lg: '70%' }}>
         <Input
           isDisabled={btnDisabled}
           placeholder='Input the prompt here.'

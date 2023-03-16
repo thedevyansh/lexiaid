@@ -10,7 +10,7 @@ function ChatArea({ prompts, modelResponses, pfp }) {
       flex={1}
       overflow='auto'
       mx={{ lg: 10 }}
-      my={4}
+      my={2}
       spacing={6}>
       {prompts.map((prompt, index) => (
         <>
@@ -21,7 +21,6 @@ function ChatArea({ prompts, modelResponses, pfp }) {
           )}
         </>
       ))}
-      {/* <ModelResponse /> */}
     </VStack>
   );
 }

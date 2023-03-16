@@ -6,10 +6,10 @@ import InputPrompt from '../InputPrompt';
 
 const PromptArea = ({ showSidebarButton = true, onShowSidebar, pfp }) => {
   const [prompts, setPrompts] = useState([]);
-  const [modelResponses, setModelResponses] = useState([])
+  const [modelResponses, setModelResponses] = useState([]);
 
   return (
-    <Box h='100vh' display='flex' flexDirection='column' flex='1' p={4}>
+    <Box h='100vh' display='flex' flexDirection='column' flex='1' p={3}>
       <PromptAreaHeader
         showSidebarButton={showSidebarButton}
         onShowSidebar={onShowSidebar}
@@ -22,7 +22,14 @@ const PromptArea = ({ showSidebarButton = true, onShowSidebar, pfp }) => {
         <Divider />
       </Flex>
       <ChatArea pfp={pfp} prompts={prompts} modelResponses={modelResponses} />
-      <InputPrompt setPrompts={setPrompts} setModelResponses={setModelResponses} />
+      <InputPrompt
+        setPrompts={setPrompts}
+        setModelResponses={setModelResponses}
+      />
+      <Text fontSize='sm' textAlign='center' mt={2}>
+        Our goal is to provide a more accessible and intuitive way to understand
+        and learn.
+      </Text>
     </Box>
   );
 };
