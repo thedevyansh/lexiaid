@@ -5,84 +5,92 @@ import {
   InputRightElement,
   IconButton,
   Flex,
+  Center,
 } from '@chakra-ui/react';
+import { useForm } from 'react-hook-form';
 import { FaPaperPlane } from 'react-icons/fa';
 import { FiUpload } from 'react-icons/fi';
-import axios from 'axios';
-
-const instance = axios.create({
-  baseURL:
-    !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
-      ? 'http://localhost:5000'
-      : 'https://lexiaid.herokuapp.com',
-  withCredentials: true,
-});
+import * as ttfApi from '../../services/ttf';
 
 function InputPrompt({ setPrompts, setModelResponses }) {
   const [prompt, setPrompt] = useState('');
-  const [btnDisabled, setBtnDisabled] = useState(false);
+  const [inputDisabled, setInputDisabled] = useState(false);
 
-  const handleKeyDown = e => {
-    if (e.key === 'Enter') {
-      handleSubmitPrompt();
-    }
-  };
+  const {
+    register,
+    formState: { isSubmitting },
+    handleSubmit,
+  } = useForm();
+
+  function mySubmit(e) {
+    e.preventDefault();
+    handleSubmit(handleSubmitPrompt)(e);
+  }
 
   async function handleSubmitPrompt() {
-    if (prompt !== '') {
-      const request = {
-        user_prompt: prompt,
-      };
+    if (prompt?.trim() !== '') {
       setPrompts(prevPrompts => [...prevPrompts, prompt]);
       setPrompt('');
-      setBtnDisabled(true);
+      setInputDisabled(true);
 
-      const response = await instance.post(
-        'http://localhost:5000/service/generate_ttf',
-        request
-      );
+      const response = await ttfApi.generate_ttf({ user_prompt: prompt });
 
       setModelResponses(prevModelResponses => [
         ...prevModelResponses,
-        { images: response.data.images, sentences: response.data.sentences },
+        {
+          _id: response.data._id,
+          images: response.data.images,
+          sentences: response.data.sentences,
+        },
       ]);
 
-      setBtnDisabled(false);
+      setInputDisabled(false);
     }
   }
 
   return (
-    <Flex mt={4} align='center' justify='center'>
-      <InputGroup
-        size='lg'
-        borderColor='gray.400'
+    <Center>
+      <Flex
+        mt={4}
+        align='center'
+        justify='center'
         width={{ base: '100%', lg: '70%' }}>
-        <Input
-          isDisabled={btnDisabled}
-          placeholder='Input the prompt here.'
-          value={prompt}
-          onKeyDown={handleKeyDown}
-          onChange={e => setPrompt(e.target.value)}
+        <form onSubmit={mySubmit} autoComplete='off' style={{ width: '100%' }}>
+          <InputGroup size='lg'>
+            <Input
+              id='prompt'
+              type='text'
+              {...register('prompt')}
+              placeholder='Input your prompt here'
+              value={prompt}
+              variant='filled'
+              boxShadow='xl'
+              onChange={e => setPrompt(e.target.value)}
+              isDisabled={inputDisabled}
+            />
+            <InputRightElement>
+              <IconButton
+                type='submit'
+                isLoading={isSubmitting}
+                variant='ghost'
+                colorScheme='twitter'
+                aria-label='Send Message'
+                icon={<FaPaperPlane size='24px' />}
+              />
+            </InputRightElement>
+          </InputGroup>
+        </form>
+        <IconButton
+          boxShadow='xl'
+          size='lg'
+          colorScheme='yellow'
+          aria-label='Upload file'
+          icon={<FiUpload />}
+          isRound='true'
+          ml={3}
         />
-        <InputRightElement>
-          <IconButton
-            isDisabled={btnDisabled}
-            colorScheme='twitter'
-            aria-label='Send Message'
-            icon={<FaPaperPlane />}
-            onClick={handleSubmitPrompt}
-          />
-        </InputRightElement>
-      </InputGroup>
-      <IconButton
-        size='lg'
-        colorScheme='yellow'
-        aria-label='Upload file'
-        icon={<FiUpload />}
-        isRound='true'
-        ml={3}
-      />
-    </Flex>
+      </Flex>
+    </Center>
   );
 }
 

@@ -1,7 +1,7 @@
-import json
+import json, uuid
 
 from flask import Blueprint, abort, request, session, g
-from bson.objectid import ObjectId
+import bson
 from flask_cors import cross_origin
 from flaskbackend.db import get_db_client
 
@@ -35,13 +35,15 @@ def new_ttf():
         return abort(op_data["error"]["code"], op_data["error"]["message"])
 
     ttf_collection = lexiaid_db["ttf_collection"]
-    ttf_collection.insert_one(
+    _id = ttf_collection.insert_one(
         {
+            "_id": bson.Binary.from_uuid(uuid.uuid4()),
             "ip_text": ip_text,
             "sentences": op_data["sentences"],
             "images": op_data["images"],
             "user_id": user["_id"],
         }
-    )
+    ).inserted_id
 
+    op_data["_id"] = str(_id)
     return op_data, 200

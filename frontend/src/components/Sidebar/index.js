@@ -82,7 +82,7 @@ const Sidebar = ({ isOpen, variant, onClose, user }) => {
       rowGap={4}
       color='gray.200'
       p={5}
-      w='320px'
+      w='280px'
       h='100vh'
       bg='#1A202C'>
       <SidebarContent user={user} handleLogout={handleLogout} />

@@ -26,7 +26,7 @@ const PromptArea = ({ showSidebarButton = true, onShowSidebar, pfp }) => {
         setPrompts={setPrompts}
         setModelResponses={setModelResponses}
       />
-      <Text fontSize='sm' textAlign='center' mt={2}>
+      <Text fontSize={{ base: 'xs', lg: 'sm' }} textAlign='center' mt={2}>
         Our goal is to provide a more accessible and intuitive way to understand
         and learn.
       </Text>
