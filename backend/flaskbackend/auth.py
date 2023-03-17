@@ -12,7 +12,6 @@ from flask import (
     render_template_string,
 )
 from werkzeug.security import check_password_hash, generate_password_hash
-from bson.objectid import ObjectId
 from flask_cors import cross_origin
 from flaskbackend.db import get_db_client
 
@@ -22,16 +21,16 @@ bp = Blueprint("auth", __name__, url_prefix="/auth")
 @bp.route("/", methods=["GET"])
 @cross_origin(supports_credentials=True)
 def auth():
-    userId = session.get("userId", None)
+    username = session.get("username", None)
 
-    if userId is None:
+    if username is None:
         g.user = None
         return "Unauthorized", 401
     else:
         client = get_db_client()
-        users = client["users"]
-        users_collection = users["users_collection"]
-        user = users_collection.find_one({"_id": ObjectId(userId)})
+        lexiaid_db = client["lexiaid_db"]
+        users_collection = lexiaid_db["users_collection"]
+        user = users_collection.find_one({"username": username})
 
         if user:
             g.user = user
@@ -61,8 +60,8 @@ def register():
         return "Please input an alphanumeric username.", 400
 
     client = get_db_client()
-    users = client["users"]
-    users_collection = users["users_collection"]
+    lexiaid_db = client["lexiaid_db"]
+    users_collection = lexiaid_db["users_collection"]
     user = users_collection.find_one({"username": username})
 
     if user:
@@ -76,9 +75,7 @@ def register():
         }
     )
 
-    user = users_collection.find_one({"username": username})
-    session["userId"] = str(user["_id"])
-
+    session["username"] = str(username)
     return "Successfully logged in!", 200
 
 
@@ -90,8 +87,8 @@ def login():
     password = form_data["password"]
 
     client = get_db_client()
-    users = client["users"]
-    users_collection = users["users_collection"]
+    lexiaid_db = client["lexiaid_db"]
+    users_collection = lexiaid_db["users_collection"]
     user = users_collection.find_one({"username": username})
 
     error = None
@@ -103,7 +100,7 @@ def login():
 
     if error is None:
         session.clear()
-        session["userId"] = str(user["_id"])
+        session["username"] = str(user["username"])
         return "Successfully logged in!", 200
 
     return error, 401
@@ -150,8 +147,8 @@ def google_login_callback():
     pfp = user["picture"]
 
     client = get_db_client()
-    users = client["users"]
-    users_collection = users["users_collection"]
+    lexiaid_db = client["lexiaid_db"]
+    users_collection = lexiaid_db["users_collection"]
     user = users_collection.find_one({"username": username})
 
     if not user:
@@ -164,9 +161,7 @@ def google_login_callback():
             }
         )
 
-        user = users_collection.find_one({"username": username})
-
-    session["userId"] = str(user["_id"])
+    session["username"] = str(username)
     return render_template_string(
         """
         <script>

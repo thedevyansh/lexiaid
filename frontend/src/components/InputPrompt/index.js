@@ -38,7 +38,7 @@ function InputPrompt({ setPrompts, setModelResponses }) {
       setBtnDisabled(true);
 
       const response = await instance.post(
-        'http://localhost:5000/service/new_ttf',
+        'http://localhost:5000/service/generate_ttf',
         request
       );
 
