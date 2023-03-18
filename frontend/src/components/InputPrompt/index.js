@@ -28,17 +28,20 @@ function InputPrompt({ setPrompts, setModelResponses }) {
   }
 
   async function handleSubmitPrompt() {
-    if (prompt?.trim() !== '') {
-      setPrompts(prevPrompts => [...prevPrompts, prompt]);
+    const trimmedPrompt = prompt?.trim()
+    if (trimmedPrompt !== '') {
+      setPrompts(prevPrompts => [...prevPrompts, trimmedPrompt]);
       setPrompt('');
       setInputDisabled(true);
 
-      const response = await ttfApi.generate_ttf({ user_prompt: prompt });
+      // Only to simulate the delay in receiving the response. Remove this later.
+      await new Promise(r => setTimeout(r, 3000));
+
+      const response = await ttfApi.generate_ttf({ user_prompt: trimmedPrompt });
 
       setModelResponses(prevModelResponses => [
         ...prevModelResponses,
         {
-          _id: response.data._id,
           images: response.data.images,
           sentences: response.data.sentences,
         },
@@ -58,13 +61,16 @@ function InputPrompt({ setPrompts, setModelResponses }) {
         <form onSubmit={mySubmit} autoComplete='off' style={{ width: '100%' }}>
           <InputGroup size='lg'>
             <Input
+              autoFocus
               id='prompt'
               type='text'
               {...register('prompt')}
-              placeholder='Input your prompt here'
+              placeholder='Input the prompt here.'
               value={prompt}
               variant='filled'
               boxShadow='xl'
+              focusBorderColor='transparent'
+              _focus={{ bg: '#EDF2F6' }}
               onChange={e => setPrompt(e.target.value)}
               isDisabled={inputDisabled}
             />

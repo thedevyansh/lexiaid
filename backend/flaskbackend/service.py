@@ -1,13 +1,37 @@
-import json, uuid
+import json
 
-from flask import Blueprint, abort, request, session, g
-import bson
+from flask import Blueprint, abort, request, session, g, jsonify
 from flask_cors import cross_origin
 from flaskbackend.db import get_db_client
 
 from .service_helpers.ttf import ttf
 
 bp = Blueprint("service", __name__, url_prefix="/service")
+
+
+@bp.route("/get_ttf", methods=["GET"])
+@cross_origin(supports_credentials=True)
+def get_ttf():
+    username = session.get("username", None)
+    if username is None:
+        g.user = None
+        abort(401, "Unauthorized")
+
+    client = get_db_client()
+    lexiaid_db = client["lexiaid_db"]
+    users_collection = lexiaid_db["users_collection"]
+    user = users_collection.find_one({"username": username})
+
+    ttf_collection = lexiaid_db["ttf_collection"]
+    cursor = ttf_collection.find({"user_id": user["_id"]})
+
+    user_prompts_and_responses = []
+    for document in cursor:
+        del document["_id"]
+        del document["user_id"]
+        user_prompts_and_responses.append(document)
+
+    return jsonify(user_prompts_and_responses), 200
 
 
 # text to figure generation service
@@ -35,15 +59,13 @@ def new_ttf():
         return abort(op_data["error"]["code"], op_data["error"]["message"])
 
     ttf_collection = lexiaid_db["ttf_collection"]
-    _id = ttf_collection.insert_one(
+    ttf_collection.insert_one(
         {
-            "_id": bson.Binary.from_uuid(uuid.uuid4()),
             "ip_text": ip_text,
             "sentences": op_data["sentences"],
             "images": op_data["images"],
             "user_id": user["_id"],
         }
-    ).inserted_id
+    )
 
-    op_data["_id"] = str(_id)
     return op_data, 200

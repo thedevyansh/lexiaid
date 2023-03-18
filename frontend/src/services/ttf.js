@@ -8,6 +8,10 @@ const instance = axios.create({
   withCredentials: true,
 });
 
+export const get_ttf = () => {
+  return instance.get('/service/get_ttf');
+};
+
 export const generate_ttf = request => {
   return instance.post('/service/generate_ttf', request);
 };
