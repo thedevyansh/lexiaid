@@ -27,6 +27,9 @@ export const ttfSlice = createSlice({
     addUserPrompt: (state, { payload }) => {
       state.prompts.push(payload);
     },
+    changeStatusToFetched: state => {
+      state.status = 'fetched';
+    },
   },
   extraReducers: {
     [get.pending]: state => {
@@ -51,7 +54,6 @@ export const ttfSlice = createSlice({
     [get.rejected]: state => {
       state.status = 'failed';
     },
-
     [generateTtf.fulfilled]: (state, { payload }) => {
       state.modelResponses.push({
         sentences: payload['sentences'],
@@ -61,6 +63,6 @@ export const ttfSlice = createSlice({
   },
 });
 
-export const { addUserPrompt } = ttfSlice.actions;
+export const { addUserPrompt, changeStatusToFetched } = ttfSlice.actions;
 
 export default ttfSlice.reducer;

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { VStack, useToast } from '@chakra-ui/react';
 import UserPrompt from '../UserPrompt';
 import ModelResponse from '../ModelResponse';
-import { get } from '../../slices/ttfSlice';
+import { get, changeStatusToFetched } from '../../slices/ttfSlice';
 
 function ChatArea({ pfp }) {
   const promptsEnd = useRef({});
@@ -13,7 +13,7 @@ function ChatArea({ pfp }) {
   const toast = useToast();
 
   const showToast = useCallback(
-    (title, description, status) => {
+    (title, description, toastStatus) => {
       const id = 'toast-id';
       if (!toast.isActive(id)) {
         return toast({
@@ -21,7 +21,7 @@ function ChatArea({ pfp }) {
           title,
           description,
           variant: 'subtle',
-          status,
+          status: toastStatus,
           position: 'top-right',
           duration: 5000,
           isClosable: true,
@@ -30,6 +30,25 @@ function ChatArea({ pfp }) {
     },
     [toast]
   );
+
+  useEffect(() => {
+    if (status === 'success') {
+      dispatch(changeStatusToFetched());
+      if (prompts.length !== 0) {
+        showToast(
+          'Prompts fetched.',
+          "We've have fetched your previous prompts.",
+          'success'
+        );
+      }
+    } else if (status === 'failure') {
+      showToast(
+        'Error fetching prompts.',
+        'Unable to fetch previous prompts at the moment.',
+        'success'
+      );
+    }
+  }, [status, showToast, dispatch, prompts.length]);
 
   const scrollToBottom = () => {
     promptsEnd.current?.scrollIntoView({ behavior: 'smooth' });
@@ -41,23 +60,9 @@ function ChatArea({ pfp }) {
 
   useEffect(() => {
     if (status === 'idle') {
-      dispatch(get()).then(res => {
-        if (res.type === 'ttf/get/rejected') {
-          showToast(
-            'Error fetching prompts.',
-            'Unable to fetch previous prompts at the moment.',
-            'success'
-          );
-        } else if (res.type === 'ttf/get/fulfilled') {
-          showToast(
-            'Prompts fetched.',
-            "We've have fetched your previous prompts.",
-            'success'
-          );
-        }
-      });
+      dispatch(get());
     }
-  }, [status, dispatch, showToast]);
+  }, [dispatch, status]);
 
   return (
     <VStack
