@@ -1,13 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Box, Divider, Flex, Text } from '@chakra-ui/react';
 import PromptAreaHeader from '../PromptAreaHeader';
 import ChatArea from '../ChatArea';
 import InputPrompt from '../InputPrompt';
 
 const PromptArea = ({ showSidebarButton = true, onShowSidebar, pfp }) => {
-  const [prompts, setPrompts] = useState([]);
-  const [modelResponses, setModelResponses] = useState([]);
-
   return (
     <Box h='100vh' display='flex' flexDirection='column' flex='1' p={3}>
       <PromptAreaHeader
@@ -21,11 +18,8 @@ const PromptArea = ({ showSidebarButton = true, onShowSidebar, pfp }) => {
         </Text>
         <Divider />
       </Flex>
-      <ChatArea pfp={pfp} prompts={prompts} modelResponses={modelResponses} />
-      <InputPrompt
-        setPrompts={setPrompts}
-        setModelResponses={setModelResponses}
-      />
+      <ChatArea pfp={pfp} />
+      <InputPrompt />
       <Text fontSize={{ base: 'xs', lg: 'sm' }} textAlign='center' mt={2}>
         Our goal is to provide a more accessible and intuitive way to understand
         and learn.

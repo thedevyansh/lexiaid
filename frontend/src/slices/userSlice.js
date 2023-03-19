@@ -38,7 +38,7 @@ export const userSlice = createSlice({
   reducers: {},
   extraReducers: {
     [authenticate.pending]: state => {
-      state.state = 'loading';
+      state.status = 'loading';
     },
     [authenticate.fulfilled]: (state, { payload }) => {
       state.status = 'success';

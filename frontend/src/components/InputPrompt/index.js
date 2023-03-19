@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { addUserPrompt, generateTtf } from '../../slices/ttfSlice';
 import {
   InputGroup,
   Input,
@@ -10,11 +12,11 @@ import {
 import { useForm } from 'react-hook-form';
 import { FaPaperPlane } from 'react-icons/fa';
 import { FiUpload } from 'react-icons/fi';
-import * as ttfApi from '../../services/ttf';
 
-function InputPrompt({ setPrompts, setModelResponses }) {
+function InputPrompt() {
   const [prompt, setPrompt] = useState('');
   const [inputDisabled, setInputDisabled] = useState(false);
+  const dispatch = useDispatch();
 
   const {
     register,
@@ -28,24 +30,15 @@ function InputPrompt({ setPrompts, setModelResponses }) {
   }
 
   async function handleSubmitPrompt() {
-    const trimmedPrompt = prompt?.trim()
+    const trimmedPrompt = prompt?.trim();
     if (trimmedPrompt !== '') {
-      setPrompts(prevPrompts => [...prevPrompts, trimmedPrompt]);
+      dispatch(addUserPrompt(trimmedPrompt));
       setPrompt('');
       setInputDisabled(true);
 
       // Only to simulate the delay in receiving the response. Remove this later.
-      await new Promise(r => setTimeout(r, 3000));
-
-      const response = await ttfApi.generate_ttf({ user_prompt: trimmedPrompt });
-
-      setModelResponses(prevModelResponses => [
-        ...prevModelResponses,
-        {
-          images: response.data.images,
-          sentences: response.data.sentences,
-        },
-      ]);
+      await new Promise(r => setTimeout(r, 2000));
+      dispatch(generateTtf({ user_prompt: trimmedPrompt })); // use ttf/generateTtf/fulfilled and rejected here
 
       setInputDisabled(false);
     }
