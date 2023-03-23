@@ -5,9 +5,9 @@ import { BiReset } from 'react-icons/bi';
 
 function ChangeFontSize() {
   return (
-    <Flex align="center" justify='space-between'>
+    <Flex align='center' justify='space-between'>
       <Text>Font size:</Text>
-      <ButtonGroup variant='outline' isAttached>
+      <ButtonGroup isAttached>
         <IconButton icon={<MinusIcon />} />
         <IconButton icon={<BiReset />} />
         <IconButton icon={<AddIcon />} />

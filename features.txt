@@ -1,0 +1,2 @@
+1) Adjustable font size: increase, decrease and reset. The font size should change with respect to the current font size of any element. Should also persist on reload. (to-do)
+2) High contrast feature (done)

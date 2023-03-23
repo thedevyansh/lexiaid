@@ -62,8 +62,6 @@ function InputPrompt() {
               value={prompt}
               variant='filled'
               boxShadow='xl'
-              focusBorderColor='transparent'
-              _focus={{ bg: '#EDF2F6' }}
               onChange={e => setPrompt(e.target.value)}
               isDisabled={inputDisabled}
             />
