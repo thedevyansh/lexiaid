@@ -1,5 +1,6 @@
 import { Flex, Image } from '@chakra-ui/react';
 import CarouselResponse from '../CarouselResponse';
+import { RotatingLines } from 'react-loader-spinner';
 import logo from './logo.png';
 
 function ModelResponse({ modelResponse }) {
@@ -11,7 +12,17 @@ function ModelResponse({ modelResponse }) {
         src={logo}
         fallbackSrc='https://via.placeholder.com/35'
       />
-      <CarouselResponse modelResponse={modelResponse} />
+      {!modelResponse ? (
+        <RotatingLines
+          strokeColor='#36B6FF'
+          strokeWidth='4'
+          animationDuration='0.75'
+          width='40'
+          visible={true}
+        />
+      ) : (
+        <CarouselResponse modelResponse={modelResponse} />
+      )}
     </Flex>
   );
 }

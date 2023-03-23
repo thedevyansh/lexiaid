@@ -18,6 +18,7 @@ import { BiHomeAlt2 } from 'react-icons/bi';
 import { FiLogOut } from 'react-icons/fi';
 
 import { logout } from '../../slices/userSlice';
+import AccessibilityBtn from '../AssessibilityBtn';
 
 const URI =
   !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
@@ -26,16 +27,19 @@ const URI =
 
 const SidebarContent = ({ handleLogout, user }) => (
   <>
-    <Button
-      leftIcon={<BiHomeAlt2 />}
-      variant='ghost'
-      _hover={{ bg: 'gray.700' }}
-      w='max-content'
-      onClick={() => {
-        window.open(URI, '_self');
-      }}>
-      Home
-    </Button>
+    <Box display='flex' justifyContent='space-between'>
+      <Button
+        leftIcon={<BiHomeAlt2 />}
+        variant='ghost'
+        _hover={{ bg: 'gray.700' }}
+        w='max-content'
+        onClick={() => {
+          window.open(URI, '_self');
+        }}>
+        Home
+      </Button>
+      <AccessibilityBtn />
+    </Box>
 
     <VStack spacing={4}>
       <Avatar
@@ -82,7 +86,7 @@ const Sidebar = ({ isOpen, variant, onClose, user }) => {
       rowGap={4}
       color='gray.200'
       p={5}
-      w='320px'
+      w='280px'
       h='100vh'
       bg='#1A202C'>
       <SidebarContent user={user} handleLogout={handleLogout} />
