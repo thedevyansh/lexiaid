@@ -15,3 +15,8 @@ export const get_ttf = () => {
 export const generate_ttf = request => {
   return instance.post('/service/generate_ttf', request);
 };
+
+export const generate_ttf_from_pdf = request => {
+  return instance.post('/service/generate_ttf_from_pdf', request);
+};
+

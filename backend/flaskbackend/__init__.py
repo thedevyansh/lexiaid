@@ -14,6 +14,7 @@ def create_app(test_config=None):
         SECRET_KEY="dev",  # for production, generate secret key using OS cryptographic random generator.
         DATABASE_HOST="localhost",
         DATABASE_PORT=27017,
+        MAX_CONTENT_LENGTH=16 * 1000 * 1000
     )
 
     app.oauth = oauth

@@ -20,6 +20,14 @@ export const generateTtf = createAsyncThunk(
   }
 );
 
+export const uploadPdfAndGenerateTtf = createAsyncThunk(
+  'ttf/uploadPdfAndGenerateTtf',
+  async request => {
+    const response = await ttfApi.generate_ttf_from_pdf(request);
+    return response.data;
+  }
+);
+
 export const ttfSlice = createSlice({
   name: 'ttf',
   initialState,
@@ -29,6 +37,12 @@ export const ttfSlice = createSlice({
     },
     changeStatusToFetched: state => {
       state.status = 'fetched';
+    },
+    addModelResponseOfPdf: (state, { payload }) => {
+      state.modelResponses.push({
+        sentences: payload['sentences'],
+        images: payload['images'],
+      });
     },
   },
   extraReducers: {
@@ -63,6 +77,7 @@ export const ttfSlice = createSlice({
   },
 });
 
-export const { addUserPrompt, changeStatusToFetched } = ttfSlice.actions;
+export const { addUserPrompt, changeStatusToFetched, addModelResponseOfPdf } =
+  ttfSlice.actions;
 
 export default ttfSlice.reducer;

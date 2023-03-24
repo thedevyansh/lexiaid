@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { VStack, useToast } from '@chakra-ui/react';
+import { VStack, useToast, Divider } from '@chakra-ui/react';
 import UserPrompt from '../UserPrompt';
 import ModelResponse from '../ModelResponse';
 import { get, changeStatusToFetched } from '../../slices/ttfSlice';
@@ -70,7 +70,7 @@ function ChatArea({ pfp }) {
       align='stretch'
       flex={1}
       overflow='auto'
-      mx={{ lg: 10 }}
+      mx={{ lg: 20 }}
       my={2}
       spacing={6}>
       {prompts.map((prompt, index) => (
@@ -79,7 +79,10 @@ function ChatArea({ pfp }) {
           {!modelResponses[index] ? (
             <ModelResponse modelResponse={null} />
           ) : (
-            <ModelResponse modelResponse={modelResponses[index]} />
+            <>
+              <ModelResponse modelResponse={modelResponses[index]} />
+              <Divider />
+            </>
           )}
         </React.Fragment>
       ))}
