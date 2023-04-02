@@ -6,7 +6,7 @@ import InputPrompt from '../InputPrompt';
 
 const PromptArea = ({ showSidebarButton = true, onShowSidebar, pfp }) => {
   return (
-    <Box h='100vh' display='flex' flexDirection='column' flex='1' p={3}>
+    <Box h='100vh' display='flex' flexDirection='column' flex='1' p={4}>
       <PromptAreaHeader
         showSidebarButton={showSidebarButton}
         onShowSidebar={onShowSidebar}

@@ -1,6 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useDispatch } from 'react-redux';
-import { addUserPrompt, generateTtf } from '../../slices/ttfSlice';
+import {
+  addUserPrompt,
+  generateTtf,
+  uploadPdfAndGenerateTtf,
+  addModelResponseOfPdf,
+} from '../../slices/ttfSlice';
 import {
   InputGroup,
   Input,
@@ -16,6 +21,7 @@ import { FiUpload } from 'react-icons/fi';
 function InputPrompt() {
   const [prompt, setPrompt] = useState('');
   const [inputDisabled, setInputDisabled] = useState(false);
+  const inputRef = useRef(null);
   const dispatch = useDispatch();
 
   const {
@@ -27,6 +33,44 @@ function InputPrompt() {
   function mySubmit(e) {
     e.preventDefault();
     handleSubmit(handleSubmitPrompt)(e);
+  }
+
+  function handleFileUpload() {
+    inputRef.current.click();
+  }
+
+  function handleFileChange(e) {
+    const file = e.target.files[0];
+    if (file) {
+      uploadFile(file);
+    }
+  }
+
+  async function uploadFile(file) {
+    dispatch(addUserPrompt(file.name));
+    setInputDisabled(true);
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    // NEED TO CHECK WHY DISPATCH ISN'T WORKING WHILE UPLOADING PDF !!!
+    // dispatch(uploadPdfAndGenerateTtf({ file: formData }));
+
+    // Only to simulate the delay in receiving the response. Remove this later.
+    await new Promise(r => setTimeout(r, 2000));
+
+    const response = await fetch(
+      'http://localhost:5000/service/generate_ttf_from_pdf',
+      {
+        method: 'POST',
+        body: formData,
+        credentials: 'include',
+      }
+    );
+    const data = await response.json();
+    // handle errors for unsupported media, file not found, etc. here...
+    dispatch(addModelResponseOfPdf(data));
+    setInputDisabled(false);
   }
 
   async function handleSubmitPrompt() {
@@ -62,8 +106,6 @@ function InputPrompt() {
               value={prompt}
               variant='filled'
               boxShadow='xl'
-              focusBorderColor='transparent'
-              _focus={{ bg: '#EDF2F6' }}
               onChange={e => setPrompt(e.target.value)}
               isDisabled={inputDisabled}
             />
@@ -74,11 +116,13 @@ function InputPrompt() {
                 variant='ghost'
                 colorScheme='twitter'
                 aria-label='Send Message'
+                isDisabled={inputDisabled}
                 icon={<FaPaperPlane size='24px' />}
               />
             </InputRightElement>
           </InputGroup>
         </form>
+        {/* <form encType='multipart/form-data'> */}
         <IconButton
           boxShadow='xl'
           size='lg'
@@ -86,8 +130,17 @@ function InputPrompt() {
           aria-label='Upload file'
           icon={<FiUpload />}
           isRound='true'
+          onClick={handleFileUpload}
+          isDisabled={inputDisabled}
           ml={3}
         />
+        <Input
+          type='file'
+          ref={inputRef}
+          display='none'
+          onChange={handleFileChange}
+        />
+        {/* </form> */}
       </Flex>
     </Center>
   );

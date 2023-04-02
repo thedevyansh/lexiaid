@@ -3,10 +3,10 @@ def process(ip_text):
     op["error"] = {"code": 200, "message": "OK"}
 
     # example error function TO-DO: add error handling
-    if len(ip_text) > 200:
+    if len(ip_text) > 20000:
         op["error"] = {
             "code": 501,
-            "message": "API does not support string greater than 50 chars",
+            "message": "API does not support string greater than 20000 chars",
         }
         return op
 
