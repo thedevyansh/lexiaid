@@ -23,7 +23,7 @@ function UserPrompt({ prompt, pfp }) {
           prompt
         )}
       </Box>
-      {re.exec(prompt)[1] !== 'pdf' ? <ImmersiveReader /> : null}
+      {re.exec(prompt)[1] !== 'pdf' ? <ImmersiveReader prompt={prompt} /> : null}
     </Flex>
   );
 }
