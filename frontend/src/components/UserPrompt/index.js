@@ -1,5 +1,6 @@
 import { Box, Flex, Image, Text, Icon } from '@chakra-ui/react';
 import { AiOutlineFilePdf } from 'react-icons/ai';
+import ImmersiveReader from '../ImmersiveReader';
 
 var re = /(?:\.([^.]+))?$/;
 
@@ -22,6 +23,7 @@ function UserPrompt({ prompt, pfp }) {
           prompt
         )}
       </Box>
+      {re.exec(prompt)[1] !== 'pdf' ? <ImmersiveReader /> : null}
     </Flex>
   );
 }
