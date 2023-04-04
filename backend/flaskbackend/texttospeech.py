@@ -22,19 +22,22 @@ def generate_texttospeech():
         os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credential_path
 
         text = request.json["text"]
+        speakingrate = request.json["speakingRate"]
+        if request.json["voiceGender"] == "female":
+            voicegender = texttospeech.SsmlVoiceGender.FEMALE
+        else:
+            voicegender = texttospeech.SsmlVoiceGender.MALE
 
         client = texttospeech.TextToSpeechClient()
 
         synthesis_input = texttospeech.SynthesisInput(text=text)
 
-        # Build the voice request, select the language code ("en-US") and the ssml
-        # voice gender ("neutral")
         voice = texttospeech.VoiceSelectionParams(
-            language_code="en-US", ssml_gender=texttospeech.SsmlVoiceGender.NEUTRAL
+            language_code="en-US", ssml_gender=voicegender
         )
 
         audio_config = texttospeech.AudioConfig(
-            audio_encoding=texttospeech.AudioEncoding.MP3
+            audio_encoding=texttospeech.AudioEncoding.MP3, speaking_rate=speakingrate
         )
 
         response = client.synthesize_speech(

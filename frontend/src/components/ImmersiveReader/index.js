@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Modal,
   ModalOverlay,
@@ -20,12 +20,22 @@ import { BsFillPlayFill, BsFillPauseFill } from 'react-icons/bs';
 import * as textToSpeechApi from '../../services/texttospeech';
 
 function ImmersiveReader({ prompt, isOpen, onClose }) {
-  const [audio, setAudio] = useState(new Audio());
+  const [audio, setAudio] = useState(null);
   const [audioUrl, setAudioUrl] = useState(null);
   const [playing, setPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
-  const toastIdRef = useRef();
+
+  const showToast = () => {
+    toast({
+      description: 'Please wait...',
+      status: 'info',
+      variant: 'subtle',
+      position: 'top',
+      duration: 5000,
+      isClosable: true,
+    });
+  };
 
   useEffect(() => {
     if (audioUrl) {
@@ -35,40 +45,25 @@ function ImmersiveReader({ prompt, isOpen, onClose }) {
         audio.pause();
       }
     }
-  }, [audio, playing, audioUrl]);
+  }, [audio, audioUrl, playing]);
 
   useEffect(() => {
-    audio.addEventListener('ended', () => setPlaying(false));
+    if (audio) audio.addEventListener('ended', () => setPlaying(false));
     return () => {
-      audio.removeEventListener('ended', () => setPlaying(false));
+      if (audio) audio.removeEventListener('ended', () => setPlaying(false));
     };
   }, [audio]);
 
-  const toggle = () => setPlaying(!playing);
+  const togglePlay = () => setPlaying(!playing);
 
-  const showToast = () => {
-    toastIdRef.current = toast({
-      description: 'Please wait...',
-      status: 'info',
-      variant: 'subtle',
-      position: 'top',
-      duration: null,
-      isClosable: true,
-    });
-  };
-
-  const closeToast = () => {
-    if (toastIdRef.current) {
-      toast.close(toastIdRef.current);
-    }
-  };
-
-  const synthesizeSpeech = async () => {
+  const synthesizeSpeech = async (speakingRate, voiceGender) => {
     setIsLoading(true);
     showToast();
 
     const response = await textToSpeechApi.synthesize_speech({
       text: prompt,
+      speakingRate,
+      voiceGender,
     });
 
     const audioBuffer = response.data;
@@ -76,34 +71,41 @@ function ImmersiveReader({ prompt, isOpen, onClose }) {
     const audioUrl = window.URL.createObjectURL(blob);
 
     setAudioUrl(audioUrl);
-    setAudio(new Audio(audioUrl));
 
-    closeToast();
+    if (!audio) {
+      setAudio(new Audio(audioUrl));
+    } else {
+      audio.src = audioUrl;
+    }
+
     setIsLoading(false);
   };
 
-  const handleImmersiveReaderClose = () => {
+  const handleAudioRemoval = isImmersiveReaderExit => {
     if (audioUrl) {
       if (playing) {
         audio.pause();
-        audio.currentTime = 0;
+        togglePlay();
       }
+      audio.currentTime = 0;
       window.URL.revokeObjectURL(audioUrl);
     }
-    onClose();
+
+    if (isImmersiveReaderExit) onClose();
   };
 
   const handlePlaySpeech = async () => {
     if (!audioUrl) {
-      synthesizeSpeech();
+      synthesizeSpeech(1, 'female');
     }
-    toggle();
+    togglePlay();
   };
 
   return (
     <>
       <Modal
         closeOnOverlayClick={false}
+        isLazy={true}
         isOpen={isOpen}
         onClose={onClose}
         motionPreset='slideInBottom'
@@ -119,7 +121,7 @@ function ImmersiveReader({ prompt, isOpen, onClose }) {
                     icon={<AiOutlineArrowLeft size='30px' />}
                     colorScheme='twitter'
                     variant='ghost'
-                    onClick={handleImmersiveReaderClose}
+                    onClick={() => handleAudioRemoval(true)}
                   />
                   <Heading as='h1' fontSize={{ base: 'xl', md: '3xl' }}>
                     Immersive Reader
@@ -153,7 +155,11 @@ function ImmersiveReader({ prompt, isOpen, onClose }) {
                   colorScheme='yellow'
                   onClick={handlePlaySpeech}
                 />
-                <VoiceOptions />
+                <VoiceOptions
+                  togglePlay={togglePlay}
+                  synthesizeSpeech={synthesizeSpeech}
+                  handleAudioRemoval={handleAudioRemoval}
+                />
               </Flex>
             </VStack>
             <AccessibilityBtn onBottom={true} />
