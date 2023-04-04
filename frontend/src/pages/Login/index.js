@@ -52,6 +52,7 @@ function Login() {
           title: 'Login error',
           description: res?.error?.message ?? 'Please try again.',
           status: 'error',
+          variant: 'subtle',
           duration: 4000,
         });
       } else if (res.type === 'user/login/fulfilled') {

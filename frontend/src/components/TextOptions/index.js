@@ -24,7 +24,6 @@ function TextOptions() {
     <Menu closeOnSelect={false}>
       <MenuButton
         as={IconButton}
-        colorScheme='twitter'
         icon={<MdTextFields size='30px' />}
         variant='ghost'
       />

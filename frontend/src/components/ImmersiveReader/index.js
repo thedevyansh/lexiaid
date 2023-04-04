@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Modal,
   ModalOverlay,
@@ -10,31 +10,32 @@ import {
   VStack,
   HStack,
   Heading,
-  useDisclosure,
+  useToast,
 } from '@chakra-ui/react';
 import AccessibilityBtn from '../AssessibilityBtn';
 import TextOptions from '../TextOptions';
 import VoiceOptions from '../VoiceOptions';
-import { GiSpeaker } from 'react-icons/gi';
 import { AiOutlineArrowLeft } from 'react-icons/ai';
 import { BsFillPlayFill, BsFillPauseFill } from 'react-icons/bs';
 import * as textToSpeechApi from '../../services/texttospeech';
 
-function ImmersiveReader({ prompt }) {
+function ImmersiveReader({ prompt, isOpen, onClose }) {
   const [audio, setAudio] = useState(new Audio());
+  const [audioUrl, setAudioUrl] = useState(null);
   const [playing, setPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const toast = useToast();
+  const toastIdRef = useRef();
 
   useEffect(() => {
-    if (audio.src.length) {
+    if (audioUrl) {
       if (playing) {
         audio.play();
       } else {
         audio.pause();
       }
     }
-  }, [audio, playing]);
+  }, [audio, playing, audioUrl]);
 
   useEffect(() => {
     audio.addEventListener('ended', () => setPlaying(false));
@@ -45,40 +46,62 @@ function ImmersiveReader({ prompt }) {
 
   const toggle = () => setPlaying(!playing);
 
-  const handleImmersiveReaderClose = () => {
-    if (playing) {
-      audio.pause();
-      audio.currentTime = 0;
-    }
-    onClose();
+  const showToast = () => {
+    toastIdRef.current = toast({
+      description: 'Please wait...',
+      status: 'info',
+      variant: 'subtle',
+      position: 'top',
+      duration: null,
+      isClosable: true,
+    });
   };
 
-  const handleOpenImmersiveReader = async () => {
+  const closeToast = () => {
+    if (toastIdRef.current) {
+      toast.close(toastIdRef.current);
+    }
+  };
+
+  const synthesizeSpeech = async () => {
     setIsLoading(true);
+    showToast();
 
     const response = await textToSpeechApi.synthesize_speech({
       text: prompt,
     });
 
-    var binaryData = [];
-    binaryData.push(response.data);
-    const audioUrl = window.URL.createObjectURL(new Blob(binaryData));
+    const audioBuffer = response.data;
+    const blob = new Blob([audioBuffer], { type: 'audio/mp3' });
+    const audioUrl = window.URL.createObjectURL(blob);
+
+    setAudioUrl(audioUrl);
     setAudio(new Audio(audioUrl));
 
+    closeToast();
     setIsLoading(false);
-    onOpen();
+  };
+
+  const handleImmersiveReaderClose = () => {
+    if (audioUrl) {
+      if (playing) {
+        audio.pause();
+        audio.currentTime = 0;
+      }
+      window.URL.revokeObjectURL(audioUrl);
+    }
+    onClose();
+  };
+
+  const handlePlaySpeech = async () => {
+    if (!audioUrl) {
+      synthesizeSpeech();
+    }
+    toggle();
   };
 
   return (
     <>
-      <IconButton
-        isLoading={isLoading}
-        icon={<GiSpeaker size='30px' />}
-        colorScheme='twitter'
-        variant='ghost'
-        onClick={handleOpenImmersiveReader}
-      />
-
       <Modal
         closeOnOverlayClick={false}
         isOpen={isOpen}
@@ -109,14 +132,15 @@ function ImmersiveReader({ prompt }) {
               <Box
                 flex='1'
                 overflow='auto'
-                fontSize='40px'
+                fontSize={{ base: '30px', md: '40px' }}
                 px={10}
-                lineHeight='200%'>
+                lineHeight='180%'>
                 {prompt}
               </Box>
 
               <Flex justifyContent='center'>
                 <IconButton
+                  isLoading={isLoading}
                   borderRadius='50%'
                   size='lg'
                   icon={
@@ -126,9 +150,8 @@ function ImmersiveReader({ prompt }) {
                       <BsFillPlayFill size='30px' />
                     )
                   }
-                  colorScheme='twitter'
-                  variant='outline'
-                  onClick={toggle}
+                  colorScheme='yellow'
+                  onClick={handlePlaySpeech}
                 />
                 <VoiceOptions />
               </Flex>
