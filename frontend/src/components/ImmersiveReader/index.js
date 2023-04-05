@@ -26,10 +26,10 @@ function ImmersiveReader({ prompt, isOpen, onClose }) {
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
 
-  const showToast = () => {
+  const showToast = ({ description, status }) => {
     toast({
-      description: 'Please wait...',
-      status: 'info',
+      description,
+      status,
       variant: 'subtle',
       position: 'top',
       duration: 5000,
@@ -58,7 +58,7 @@ function ImmersiveReader({ prompt, isOpen, onClose }) {
 
   const synthesizeSpeech = async (speakingRate, voiceGender) => {
     setIsLoading(true);
-    showToast();
+    showToast({ description: 'Please wait...', status: 'info' });
 
     const response = await textToSpeechApi.synthesize_speech({
       text: prompt,
@@ -79,6 +79,7 @@ function ImmersiveReader({ prompt, isOpen, onClose }) {
     }
 
     setIsLoading(false);
+    showToast({ description: 'Speech ready to play', status: 'success' });
   };
 
   const handleAudioRemoval = isImmersiveReaderExit => {
@@ -95,10 +96,8 @@ function ImmersiveReader({ prompt, isOpen, onClose }) {
   };
 
   const handlePlaySpeech = async () => {
-    if (!audioUrl) {
-      synthesizeSpeech(1, 'female');
-    }
-    togglePlay();
+    if (!audioUrl) synthesizeSpeech(1, 'female');
+    else togglePlay();
   };
 
   return (
@@ -156,7 +155,6 @@ function ImmersiveReader({ prompt, isOpen, onClose }) {
                   onClick={handlePlaySpeech}
                 />
                 <VoiceOptions
-                  togglePlay={togglePlay}
                   synthesizeSpeech={synthesizeSpeech}
                   handleAudioRemoval={handleAudioRemoval}
                 />

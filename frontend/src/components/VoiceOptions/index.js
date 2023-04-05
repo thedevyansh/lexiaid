@@ -17,19 +17,55 @@ import {
 } from '@chakra-ui/react';
 import { GoSettings } from 'react-icons/go';
 
-function VoiceOptions({ togglePlay, synthesizeSpeech, handleAudioRemoval }) {
+function VoiceOptions({ synthesizeSpeech, handleAudioRemoval }) {
+  const [initialSpeakingRate, setInitialSpeakingRate] = useState(1);
   const [speakingRate, setSpeakingRate] = useState(1);
+  const [speakingRateChanged, setSpeakingRateChanged] = useState(false);
+
+  const [initialVoiceGender, setInitialVoiceGender] = useState('female');
   const [voiceGender, setVoiceGender] = useState('female');
+  const [voiceGenderChanged, setVoiceGenderChanged] = useState(false);
+
+  const [isBtnClicked, setIsBtnClicked] = useState(false);
+
+  const handleMenuOpen = () => {
+    if (isBtnClicked) {
+      setInitialSpeakingRate(speakingRate);
+      setInitialVoiceGender(voiceGender);
+    }
+  };
+
+  const handleSpeakingRateChange = sr => {
+    setSpeakingRate(sr);
+    if (sr === initialSpeakingRate) {
+      setSpeakingRateChanged(false);
+    } else {
+      setSpeakingRateChanged(true);
+    }
+  };
+
+  const handleVoiceGenderChange = vg => {
+    setVoiceGender(vg);
+    if (vg === initialVoiceGender) {
+      setVoiceGenderChanged(false);
+    } else {
+      setVoiceGenderChanged(true);
+    }
+  };
 
   const handleVoiceChanges = onClose => {
     onClose();
+
+    setIsBtnClicked(true);
+    setSpeakingRateChanged(false);
+    setVoiceGenderChanged(false);
+
     handleAudioRemoval(false);
     synthesizeSpeech(speakingRate, voiceGender);
-    togglePlay();
   };
 
   return (
-    <Menu closeOnSelect={false}>
+    <Menu closeOnSelect={false} onOpen={handleMenuOpen}>
       {({ onClose }) => (
         <>
           <MenuButton
@@ -52,7 +88,7 @@ function VoiceOptions({ togglePlay, synthesizeSpeech, handleAudioRemoval }) {
                 max={2}
                 step={0.25}
                 value={speakingRate}
-                onChange={sr => setSpeakingRate(sr)}>
+                onChange={handleSpeakingRateChange}>
                 <SliderMark value={0.25} mt='2' fontSize='xs'>
                   0.25
                 </SliderMark>
@@ -74,17 +110,19 @@ function VoiceOptions({ togglePlay, synthesizeSpeech, handleAudioRemoval }) {
               title='Voice Selection'
               type='radio'
               value={voiceGender}
-              onChange={vg => setVoiceGender(vg)}>
+              onChange={handleVoiceGenderChange}>
               <MenuItemOption value='female'>Female</MenuItemOption>
               <MenuItemOption value='male'>Male</MenuItemOption>
             </MenuOptionGroup>
-            <Button
-              mt={4}
-              size='sm'
-              colorScheme='twitter'
-              onClick={() => handleVoiceChanges(onClose)}>
-              Save
-            </Button>
+            {(speakingRateChanged || voiceGenderChanged) && (
+              <Button
+                mt={4}
+                size='sm'
+                colorScheme='twitter'
+                onClick={() => handleVoiceChanges(onClose)}>
+                Save
+              </Button>
+            )}
           </MenuList>
         </>
       )}

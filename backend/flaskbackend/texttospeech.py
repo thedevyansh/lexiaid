@@ -44,4 +44,4 @@ def generate_texttospeech():
             input=synthesis_input, voice=voice, audio_config=audio_config
         )
 
-        return Response(response.audio_content, mimetype="audio/mpeg")
+        return Response(response.audio_content, mimetype="audio/mp3")
