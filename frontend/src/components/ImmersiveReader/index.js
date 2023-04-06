@@ -19,7 +19,7 @@ import { AiOutlineArrowLeft } from 'react-icons/ai';
 import { BsFillPlayFill, BsFillPauseFill } from 'react-icons/bs';
 import * as textToSpeechApi from '../../services/texttospeech';
 
-function ImmersiveReader({ prompt, isOpen, onClose }) {
+function ImmersiveReader({ prompt, isOpen, onClose, userPromptId }) {
   const [audio, setAudio] = useState(null);
   const [audioUrl, setAudioUrl] = useState(null);
   const [playing, setPlaying] = useState(false);
@@ -64,18 +64,25 @@ function ImmersiveReader({ prompt, isOpen, onClose }) {
       text: prompt,
       speakingRate,
       voiceGender,
+      userPromptId,
     });
 
-    const audioBuffer = response.data;
-    const blob = new Blob([audioBuffer], { type: 'audio/mp3' });
-    const audioUrl = window.URL.createObjectURL(blob);
+    /**
+     * time_points is a list of objects. Each object has sentenceId and startTime.
+     * startTime represents the time (in sec) at which that sentence started to narrate
+     */
+    const { audio_url, time_points } = response.data;
 
-    setAudioUrl(audioUrl);
+    // const audioBuffer = response.data.audioContent;
+    // const blob = new Blob([audioBuffer], { type: 'audio/mp3' });
+    // const audioUrl = window.URL.createObjectURL(blob);
+
+    setAudioUrl(audio_url);
 
     if (!audio) {
-      setAudio(new Audio(audioUrl));
+      setAudio(new Audio(audio_url));
     } else {
-      audio.src = audioUrl;
+      audio.src = audio_url;
     }
 
     setIsLoading(false);

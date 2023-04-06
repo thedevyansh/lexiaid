@@ -9,7 +9,5 @@ const instance = axios.create({
 });
 
 export const synthesize_speech = request => {
-  return instance.post('/texttospeech/synthesize_speech', request, {
-    responseType: 'arraybuffer',
-  });
+  return instance.post('/texttospeech/synthesize_speech', request);
 };

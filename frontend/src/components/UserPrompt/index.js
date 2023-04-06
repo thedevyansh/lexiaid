@@ -13,7 +13,7 @@ import { GiSpeaker } from 'react-icons/gi';
 
 var re = /(?:\.([^.]+))?$/;
 
-function UserPrompt({ prompt, pfp }) {
+function UserPrompt({ prompt, pfp, userPromptId }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -35,14 +35,21 @@ function UserPrompt({ prompt, pfp }) {
         )}
       </Box>
       {re.exec(prompt)[1] !== 'pdf' ? (
-        <IconButton
-          icon={<GiSpeaker size='30px' />}
-          colorScheme='twitter'
-          variant='ghost'
-          onClick={onOpen}
-        />
+        <>
+          <IconButton
+            icon={<GiSpeaker size='30px' />}
+            colorScheme='twitter'
+            variant='ghost'
+            onClick={onOpen}
+          />
+          <ImmersiveReader
+            userPromptId={userPromptId}
+            isOpen={isOpen}
+            onClose={onClose}
+            prompt={prompt}
+          />
+        </>
       ) : null}
-      <ImmersiveReader isOpen={isOpen} onClose={onClose} prompt={prompt} />
     </Flex>
   );
 }
