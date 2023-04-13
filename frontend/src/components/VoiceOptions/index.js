@@ -17,7 +17,7 @@ import {
 } from '@chakra-ui/react';
 import { GoSettings } from 'react-icons/go';
 
-function VoiceOptions({ synthesizeSpeech, handleAudioRemoval }) {
+function VoiceOptions({ synthesizeSpeech, handleAudioRemoval, modalBgColor }) {
   const [initialSpeakingRate, setInitialSpeakingRate] = useState(1);
   const [speakingRate, setSpeakingRate] = useState(1);
   const [speakingRateChanged, setSpeakingRateChanged] = useState(false);
@@ -73,6 +73,7 @@ function VoiceOptions({ synthesizeSpeech, handleAudioRemoval }) {
             size='lg'
             as={IconButton}
             icon={<GoSettings size='30px' />}
+            color={modalBgColor === '#111010' ? '#FFFFFF' : ''}
             variant='ghost'
           />
           <MenuList

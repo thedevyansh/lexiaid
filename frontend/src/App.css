@@ -1,0 +1,11 @@
+@font-face {
+  font-family: 'Comic Sans'; 
+  src: local('ComicSans'),
+    url('./fonts/ComicSans.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Calibri'; 
+    src: local('Calibri'),
+      url('./fonts/Calibri.ttf') format('truetype');
+  }

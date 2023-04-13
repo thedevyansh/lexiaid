@@ -7,6 +7,10 @@ function ImmersiveReaderText({
   playing,
   timePoints,
   timersRef,
+  fontSz,
+  increaseSpacing,
+  font,
+  modalBgColor,
 }) {
   const [sentenceToHighlight, setSentenceToHighlight] = useState('');
   const [currHighlightedSentenceIndex, setCurrHighlightedSentenceIndex] =
@@ -88,16 +92,18 @@ function ImmersiveReaderText({
     <Box
       flex='1'
       overflow='auto'
-      fontSize={{ base: '30px', md: '40px' }}
+      fontFamily={font}
+      fontSize={fontSz}
       px={10}
-      lineHeight={{ base: '180%', md: '200%' }}>
+      lineHeight={increaseSpacing ? '260%' : '200%'}
+      letterSpacing={increaseSpacing ? '10px' : '2px'}>
       {playing && timePoints.length ? (
         <Text color='gray.400'>
           <Highlight
             query={sentenceToHighlight}
             styles={{
               py: '1',
-              bg: '#FFDE59',
+              bg: '#B4D7FE',
               fontWeight: 'medium',
               whiteSpace: 'pre-wrap',
               wordWrap: 'break-word',
@@ -106,7 +112,7 @@ function ImmersiveReaderText({
           </Highlight>
         </Text>
       ) : (
-        <Text>{prompt}</Text>
+        <Text color={modalBgColor === '#111010' ? '#FFFFFF' : ''}>{prompt}</Text>
       )}
     </Box>
   );

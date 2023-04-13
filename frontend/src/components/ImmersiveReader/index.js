@@ -12,7 +12,6 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import ImmersiveReaderText from '../ImmersiveReaderText';
-import AccessibilityBtn from '../AssessibilityBtn';
 import TextOptions from '../TextOptions';
 import VoiceOptions from '../VoiceOptions';
 import { AiOutlineArrowLeft } from 'react-icons/ai';
@@ -25,6 +24,10 @@ function ImmersiveReader({ prompt, isOpen, onClose, userPromptId }) {
   const [timePoints, setTimePoints] = useState([]);
   const [playing, setPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [fontSz, setFontSz] = useState('42px');
+  const [increaseSpacing, setIncreaseSpacing] = useState(false);
+  const [font, setFont] = useState(null);
+  const [modalBgColor, setModalBgColor] = useState(null);
   const timersRef = useRef([]);
   const toast = useToast();
 
@@ -66,6 +69,22 @@ function ImmersiveReader({ prompt, isOpen, onClose, userPromptId }) {
 
   const togglePlay = () => setPlaying(!playing);
 
+  const handleFontSizeChange = fs => {
+    setFontSz(fs + 'px');
+  };
+
+  const handleSwitchChange = () => {
+    setIncreaseSpacing(!increaseSpacing);
+  };
+
+  const handleFontChange = font => {
+    setFont(font);
+  };
+
+  const handleModalBgColor = bgColor => {
+    setModalBgColor(bgColor);
+  };
+
   const synthesizeSpeech = async (speakingRate, voiceGender) => {
     setIsLoading(true);
     showToast({ description: 'Please wait...', status: 'info' });
@@ -106,7 +125,7 @@ function ImmersiveReader({ prompt, isOpen, onClose, userPromptId }) {
       window.URL.revokeObjectURL(audioUrl);
     }
 
-    if (isImmersiveReaderExit) onClose();
+    if (isImmersiveReaderExit) window.location.reload();
   };
 
   const handlePlaySpeech = async () => {
@@ -125,23 +144,32 @@ function ImmersiveReader({ prompt, isOpen, onClose, userPromptId }) {
         size='full'
         closeOnEsc={false}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent bg={modalBgColor}>
           <ModalBody>
             <VStack h='100vh' spacing={10} align='stretch'>
               <Flex w='100%' justifyContent='space-between'>
                 <HStack spacing={6}>
                   <IconButton
                     icon={<AiOutlineArrowLeft size='30px' />}
-                    colorScheme='twitter'
                     variant='ghost'
+                    color={modalBgColor === '#111010' ? '#FFFFFF' : ''}
                     onClick={() => handleAudioRemoval(true)}
                   />
-                  <Heading as='h1' fontSize={{ base: 'xl', md: '3xl' }}>
+                  <Heading
+                    as='h1'
+                    fontSize={{ base: 'xl', md: '3xl' }}
+                    color={modalBgColor === '#111010' ? '#FFFFFF' : ''}>
                     Immersive Reader
                   </Heading>
                 </HStack>
 
-                <TextOptions />
+                <TextOptions
+                  handleFontSizeChange={handleFontSizeChange}
+                  handleSwitchChange={handleSwitchChange}
+                  handleFontChange={handleFontChange}
+                  modalBgColor={modalBgColor}
+                  handleModalBgColor={handleModalBgColor}
+                />
               </Flex>
 
               <ImmersiveReaderText
@@ -150,6 +178,10 @@ function ImmersiveReader({ prompt, isOpen, onClose, userPromptId }) {
                 timePoints={timePoints}
                 playing={playing}
                 timersRef={timersRef}
+                fontSz={fontSz}
+                increaseSpacing={increaseSpacing}
+                font={font}
+                modalBgColor={modalBgColor}
               />
 
               <Flex justifyContent='center'>
@@ -170,10 +202,10 @@ function ImmersiveReader({ prompt, isOpen, onClose, userPromptId }) {
                 <VoiceOptions
                   synthesizeSpeech={synthesizeSpeech}
                   handleAudioRemoval={handleAudioRemoval}
+                  modalBgColor={modalBgColor}
                 />
               </Flex>
             </VStack>
-            <AccessibilityBtn onBottom={true} />
           </ModalBody>
         </ModalContent>
       </Modal>
