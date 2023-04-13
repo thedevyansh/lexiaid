@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Modal,
   ModalOverlay,
   ModalContent,
   ModalBody,
-  Box,
   Flex,
   IconButton,
   VStack,
@@ -12,6 +11,7 @@ import {
   Heading,
   useToast,
 } from '@chakra-ui/react';
+import ImmersiveReaderText from '../ImmersiveReaderText';
 import AccessibilityBtn from '../AssessibilityBtn';
 import TextOptions from '../TextOptions';
 import VoiceOptions from '../VoiceOptions';
@@ -22,8 +22,10 @@ import * as textToSpeechApi from '../../services/texttospeech';
 function ImmersiveReader({ prompt, isOpen, onClose, userPromptId }) {
   const [audio, setAudio] = useState(null);
   const [audioUrl, setAudioUrl] = useState(null);
+  const [timePoints, setTimePoints] = useState([]);
   const [playing, setPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const timersRef = useRef([]);
   const toast = useToast();
 
   const showToast = ({ description, status }) => {
@@ -48,9 +50,17 @@ function ImmersiveReader({ prompt, isOpen, onClose, userPromptId }) {
   }, [audio, audioUrl, playing]);
 
   useEffect(() => {
-    if (audio) audio.addEventListener('ended', () => setPlaying(false));
+    if (audio)
+      audio.addEventListener('ended', () => {
+        setPlaying(false);
+        timersRef.current = [];
+      });
     return () => {
-      if (audio) audio.removeEventListener('ended', () => setPlaying(false));
+      if (audio)
+        audio.removeEventListener('ended', () => {
+          setPlaying(false);
+          timersRef.current = [];
+        });
     };
   }, [audio]);
 
@@ -67,10 +77,6 @@ function ImmersiveReader({ prompt, isOpen, onClose, userPromptId }) {
       userPromptId,
     });
 
-    /**
-     * time_points is a list of objects. Each object has sentenceId and startTime.
-     * startTime represents the time (in sec) at which that sentence started to narrate
-     */
     const { audio_url, time_points } = response.data;
 
     // const audioBuffer = response.data.audioContent;
@@ -78,6 +84,7 @@ function ImmersiveReader({ prompt, isOpen, onClose, userPromptId }) {
     // const audioUrl = window.URL.createObjectURL(blob);
 
     setAudioUrl(audio_url);
+    setTimePoints(time_points);
 
     if (!audio) {
       setAudio(new Audio(audio_url));
@@ -137,14 +144,13 @@ function ImmersiveReader({ prompt, isOpen, onClose, userPromptId }) {
                 <TextOptions />
               </Flex>
 
-              <Box
-                flex='1'
-                overflow='auto'
-                fontSize={{ base: '30px', md: '40px' }}
-                px={10}
-                lineHeight='180%'>
-                {prompt}
-              </Box>
+              <ImmersiveReaderText
+                prompt={prompt}
+                audio={audio}
+                timePoints={timePoints}
+                playing={playing}
+                timersRef={timersRef}
+              />
 
               <Flex justifyContent='center'>
                 <IconButton

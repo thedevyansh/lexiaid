@@ -93,10 +93,11 @@ def generate_texttospeech():
 
         timepoints = []
         if "timepoints" in response:
-            for timepoint in response.timepoints:
+            for idx, timepoint in enumerate(response.timepoints):
                 timepoints.append(
                     {
                         "sentenceId": timepoint.mark_name,
+                        "sentence": sentences[idx],
                         "startTime": timepoint.time_seconds,
                     }
                 )
