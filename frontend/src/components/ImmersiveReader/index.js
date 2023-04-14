@@ -86,6 +86,7 @@ function ImmersiveReader({ prompt, isOpen, onClose, userPromptId }) {
   };
 
   const synthesizeSpeech = async (speakingRate, voiceGender) => {
+    timersRef.current = [];
     setIsLoading(true);
     showToast({ description: 'Please wait...', status: 'info' });
 
@@ -144,7 +145,7 @@ function ImmersiveReader({ prompt, isOpen, onClose, userPromptId }) {
         size='full'
         closeOnEsc={false}>
         <ModalOverlay />
-        <ModalContent bg={modalBgColor}>
+        <ModalContent bg={modalBgColor} transition='background-color 0.5s ease'>
           <ModalBody>
             <VStack h='100vh' spacing={10} align='stretch'>
               <Flex w='100%' justifyContent='space-between'>

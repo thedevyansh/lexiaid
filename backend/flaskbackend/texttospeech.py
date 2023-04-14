@@ -1,4 +1,5 @@
 import os
+import uuid
 from flask import Blueprint, g, session, request, Response, jsonify, send_file
 from flask_cors import cross_origin
 
@@ -12,12 +13,25 @@ def create_audio_url(username, userpromptid, audio_content):
     except FileExistsError:
         pass
 
-    with open(f"{username}/speech_{userpromptid}.mp3", "wb") as out:
+    dir_path = os.path.abspath(username)
+    file_substring = f"speech_{userpromptid}"
+
+    files = os.listdir(dir_path)
+
+    for file in files:
+        if file_substring in file:
+            file_path = os.path.join(dir_path, file)
+            os.remove(file_path)
+
+    identifier = uuid.uuid4()
+    with open(f"{username}/speech_{userpromptid}_{identifier}.mp3", "wb") as out:
         out.write(audio_content)
 
     host = request.host_url.rstrip("/")
     url_prefix = bp.url_prefix
-    audio_url = f"{host}{url_prefix}/speech?speechid={userpromptid}"
+    audio_url = (
+        f"{host}{url_prefix}/speech?speechid={userpromptid}&identifier={identifier}"
+    )
 
     return audio_url
 
@@ -59,8 +73,10 @@ def generate_texttospeech():
         speakingrate = request.json["speakingRate"]
         userpromptid = request.json["userPromptId"]
         if request.json["voiceGender"] == "female":
+            voicename = "en-US-Standard-G"
             voicegender = tts.SsmlVoiceGender.FEMALE
         else:
+            voicename = "en-US-Standard-D"
             voicegender = tts.SsmlVoiceGender.MALE
 
         sentences = get_sentences(text=text)
@@ -74,7 +90,9 @@ def generate_texttospeech():
 
         synthesis_input = tts.SynthesisInput(ssml=ssml)
 
-        voice = tts.VoiceSelectionParams(language_code="en-US", ssml_gender=voicegender)
+        voice = tts.VoiceSelectionParams(
+            language_code="en-US", name=voicename, ssml_gender=voicegender
+        )
 
         audio_config = tts.AudioConfig(
             audio_encoding=tts.AudioEncoding.MP3, speaking_rate=speakingrate
@@ -117,5 +135,8 @@ def audio():
         return "Unauthorized", 401
 
     speechid = request.args.get("speechid")
+    identifier = request.args.get("identifier")
 
-    return send_file(f"../{username}/speech_{speechid}.mp3", mimetype="audio/mpeg")
+    return send_file(
+        f"../{username}/speech_{speechid}_{identifier}.mp3", mimetype="audio/mpeg"
+    )

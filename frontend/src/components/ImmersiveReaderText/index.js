@@ -103,7 +103,7 @@ function ImmersiveReaderText({
             query={sentenceToHighlight}
             styles={{
               py: '1',
-              bg: '#B4D7FE',
+              bg: '#f7dc6f',
               fontWeight: 'medium',
               whiteSpace: 'pre-wrap',
               wordWrap: 'break-word',
