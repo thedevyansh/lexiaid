@@ -1,9 +1,21 @@
-import { Box, Flex, Image, Text, Icon } from '@chakra-ui/react';
+import {
+  Box,
+  Flex,
+  Image,
+  Text,
+  Icon,
+  IconButton,
+  useDisclosure,
+} from '@chakra-ui/react';
 import { AiOutlineFilePdf } from 'react-icons/ai';
+import ImmersiveReader from '../ImmersiveReader';
+import { GiSpeaker } from 'react-icons/gi';
 
 var re = /(?:\.([^.]+))?$/;
 
-function UserPrompt({ prompt, pfp }) {
+function UserPrompt({ prompt, pfp, userPromptId }) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
     <Flex columnGap={4}>
       <Image
@@ -22,6 +34,22 @@ function UserPrompt({ prompt, pfp }) {
           prompt
         )}
       </Box>
+      {re.exec(prompt)[1] !== 'pdf' ? (
+        <>
+          <IconButton
+            icon={<GiSpeaker size='30px' />}
+            colorScheme='twitter'
+            variant='ghost'
+            onClick={onOpen}
+          />
+          <ImmersiveReader
+            userPromptId={userPromptId}
+            isOpen={isOpen}
+            onClose={onClose}
+            prompt={prompt}
+          />
+        </>
+      ) : null}
     </Flex>
   );
 }
