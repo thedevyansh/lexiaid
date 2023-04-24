@@ -18,10 +18,15 @@ import ErrorNotFound from './pages/ErrorNotFound';
 import Layout from './components/Layout';
 import withAuthorization from './components/hoc/withAuthorization';
 
+import './App.css';
+
 import '@fontsource/poppins/400.css';
 import '@fontsource/poppins/600.css';
 import '@fontsource/inter/400.css';
 import '@fontsource/inter/700.css';
+import '@fontsource/opendyslexic';
+import './fonts/Calibri.ttf';
+import './fonts/ComicSans.ttf';
 
 function App() {
   return (

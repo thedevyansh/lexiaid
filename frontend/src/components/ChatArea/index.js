@@ -75,7 +75,7 @@ function ChatArea({ pfp }) {
       spacing={6}>
       {prompts.map((prompt, index) => (
         <React.Fragment key={index}>
-          <UserPrompt prompt={prompt} pfp={pfp} />
+          <UserPrompt prompt={prompt} pfp={pfp} userPromptId={index} />
           {!modelResponses[index] ? (
             <ModelResponse modelResponse={null} />
           ) : (
