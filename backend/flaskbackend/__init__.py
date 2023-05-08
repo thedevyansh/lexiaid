@@ -46,4 +46,7 @@ def create_app(test_config=None):
     from . import texttospeech
     app.register_blueprint(texttospeech.bp)
 
+    from . import auxiliary
+    app.register_blueprint(auxiliary.bp)
+
     return app
