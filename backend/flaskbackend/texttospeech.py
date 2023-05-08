@@ -118,20 +118,3 @@ def generate_texttospeech():
         audio_url = create_audio_url(response.audio_content, username, userpromptid)
 
         return jsonify({"audio_url": audio_url, "time_points": timepoints})
-
-
-@bp.route("/speech")
-@cross_origin(supports_credentials=True)
-def audio():
-    username = session.get("username", None)
-
-    if username is None:
-        g.user = None
-        return "Unauthorized", 401
-
-    speechid = request.args.get("speechid")
-    identifier = request.args.get("identifier")
-
-    return send_file(
-        f"../{username}/speech_{speechid}_{identifier}.mp3", mimetype="audio/mpeg"
-    )

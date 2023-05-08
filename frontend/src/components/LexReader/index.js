@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Modal,
   ModalOverlay,
@@ -21,9 +21,11 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from 'react-speech-recognition';
 import { Bars } from 'react-loader-spinner';
+import Notes from '../Notes';
 
 function LexReader() {
   const [fileName, setFileName] = useState('Untitled');
+  const [notes, setNotes] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     transcript,
@@ -31,6 +33,23 @@ function LexReader() {
     resetTranscript,
     browserSupportsSpeechRecognition,
   } = useSpeechRecognition();
+
+  useEffect(() => {
+    async function get_notes() {
+      const response = await fetch(
+        'http://localhost:5000/auxiliary/get_notes',
+        {
+          method: 'GET',
+          credentials: 'include',
+        }
+      );
+
+      const user_notes = await response.json();
+      setNotes(user_notes)
+    }
+
+    get_notes();
+  }, []);
 
   const handleListening = () => {
     if (listening) {
@@ -51,7 +70,25 @@ function LexReader() {
     onClose();
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    const data = {
+      note_name: fileName,
+      note_content: transcript,
+    };
+
+    await fetch('http://localhost:5000/auxiliary/save_note', {
+      method: 'POST',
+      body: JSON.stringify(data),
+      credentials: 'include',
+    });
+
+    setNotes(prevNotes => [
+      {
+        note_name: fileName,
+        note_content: transcript,
+      },
+      ...prevNotes,
+    ]);
     resetTranscript();
     setFileName('Untitled');
     onClose();
@@ -70,6 +107,7 @@ function LexReader() {
           onClick={onOpen}
           variant='outline'
           borderWidth='0.5px'
+          justifyContent="flex-start"
           w='100%'
           _hover={{ bg: 'gray.700' }}
           isDisabled={!browserSupportsSpeechRecognition ? true : false}>
@@ -149,6 +187,8 @@ function LexReader() {
           </ModalFooter>
         </ModalContent>
       </Modal>
+
+      <Notes notes={notes} />
     </>
   );
 }
