@@ -14,8 +14,8 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import LearningArea from './pages/LearningArea';
 import ErrorNotFound from './pages/ErrorNotFound';
-import Phonics from './pages/Phonics';
-import Assessment from './pages/Assessment';
+import PhonicsDashboard from './pages/Phonics/Dashboard';
+import PhonicsLearning from './pages/Phonics/Learning';
 
 import Layout from './components/Layout';
 import withAuthorization from './components/hoc/withAuthorization';
@@ -52,14 +52,14 @@ function App() {
               component={withAuthorization(Login, NON_LOGGED_ONLY)}
             />
              <Route
-              path='/phonics'
+              path='/phonics/dashboard'
               exact
-              component={withAuthorization(Phonics, LOGGED_IN_ONLY)}
+              component={withAuthorization(PhonicsDashboard, LOGGED_IN_ONLY)}
             />
              <Route
-              path='/assessment'
+              path='/phonics/learning'
               exact
-              component={withAuthorization(Assessment, LOGGED_IN_ONLY)}
+              component={withAuthorization(PhonicsLearning, LOGGED_IN_ONLY)}
             />
             <Route
               path='/learningarea'
