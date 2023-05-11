@@ -22,6 +22,7 @@ import SpeechRecognition, {
 } from 'react-speech-recognition';
 import { Bars } from 'react-loader-spinner';
 import Notes from '../Notes';
+import { Link } from 'react-router-dom';
 
 function LexReader() {
   const [fileName, setFileName] = useState('Untitled');
@@ -96,6 +97,19 @@ function LexReader() {
 
   return (
     <>
+    <Link to="/phonics/dashboard">
+      <Button
+  
+          variant="solid"
+          color="black"
+          w='100%'
+          padding="3"
+          marginBottom="3"
+          isDisabled={!browserSupportsSpeechRecognition ? true : false}>
+            
+          Learn Phonics
+        </Button>
+      </Link>
       <Tooltip
         label={
           !browserSupportsSpeechRecognition
