@@ -69,7 +69,7 @@ export default function App() {
           </CardBody>
           <CardFooter>
             {/* <Button colorScheme="gray" variant="outline">Continue</Button> */}
-            <Link to="/assessment">
+            <Link to="/phonics/learning">
               <Button colorScheme="yellow" variant="outline">
                 Continue
               </Button>

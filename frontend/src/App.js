@@ -16,6 +16,7 @@ import LearningArea from './pages/LearningArea';
 import ErrorNotFound from './pages/ErrorNotFound';
 import PhonicsDashboard from './pages/Phonics/Dashboard';
 import PhonicsLearning from './pages/Phonics/Learning';
+import PhonicsAssessment from './pages/Phonics/Assessment';
 
 import Layout from './components/Layout';
 import withAuthorization from './components/hoc/withAuthorization';
@@ -60,6 +61,11 @@ function App() {
               path='/phonics/learning'
               exact
               component={withAuthorization(PhonicsLearning, LOGGED_IN_ONLY)}
+            />
+             <Route
+              path='/phonics/assessment'
+              exact
+              component={withAuthorization(PhonicsAssessment, LOGGED_IN_ONLY)}
             />
             <Route
               path='/learningarea'

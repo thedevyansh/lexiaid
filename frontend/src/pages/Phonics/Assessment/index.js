@@ -1,17 +1,25 @@
-import React from "react";
+import React,{useState} from "react";
 import { Helmet } from "react-helmet-async";
 import {
+  Button,
   Heading,
   Text,
   Flex,
   Card,
   CardHeader,
   IconButton,
+  Spinner
 } from "@chakra-ui/react";
-import { BiRepeat, BiSkipPrevious, BiSkipNext } from "react-icons/bi";
+import {
+  BiRepeat,
+  BiSkipPrevious,
+  BiSkipNext,
+  BiVolumeFull,
+} from "react-icons/bi";
 
-function index() {
-  const words=["can","car","cap"]
+export default function App() {
+  const words = ["can", "car", "cap"];
+  const [isSoundActive, handleSound]=useState(false);
   return (
     <Flex
       alignItems="center"
@@ -20,23 +28,30 @@ function index() {
       m="4%"
     >
       <Helmet>
-        <title>Phonics Learning Area</title>
+        <title>Phonics Assessment Area</title>
       </Helmet>
       <Text size="md" letterSpacing={1}>
-        MODULE 1
+        MODULE 1 PRACTICE
       </Text>
       <Heading>Basic Phonemes</Heading>
+      <Text size="sm" marginTop="3">
+        Identify the words that contain the spoken phoneme
+      </Text>
       <Card
         align="center"
         marginTop="5%"
         padding="2%"
         boxShadow="xl"
         p="6"
-        rounded="lg"
-        background="#f8fd89"
+        rounded="100"
+        backgroundColor={isSoundActive?"orange.300":"orange.100"}
+        border="2px"
+        borderColor="yellow.200"
       >
         <CardHeader>
-          <Heading size="4xl"> /k/</Heading>
+          <Heading size="4xl">
+            <BiVolumeFull></BiVolumeFull>
+          </Heading>
         </CardHeader>
       </Card>
       <Flex
@@ -45,13 +60,19 @@ function index() {
         justifyContent="space-between"
         wrap="nowrap"
         marginTop="3%"
-        fontSize="3xl"
+        
       >
-        {
-          words.map((key,idx)=> <Card padding="1% 4%" boxShadow="md" border="1px" borderColor="gray.200">
-          {key}
-        </Card>)
-        }
+        {words.map((key, idx) => (
+          <Button
+            padding="5%"
+            boxShadow="md"
+            border="1px"
+            borderColor="gray.200"
+            fontSize="3xl"
+          >
+            {key}
+          </Button>
+        ))}
       </Flex>
       <Flex
         flexDirection="row"
@@ -93,5 +114,3 @@ function index() {
     </Flex>
   );
 }
-
-export default index;
