@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { VStack, useToast, Divider } from '@chakra-ui/react';
+import { VStack, useToast, Divider, Text, Box } from '@chakra-ui/react';
 import UserPrompt from '../UserPrompt';
 import ModelResponse from '../ModelResponse';
 import { get, changeStatusToFetched } from '../../slices/ttfSlice';
+import { InfoOutlineIcon } from '@chakra-ui/icons';
 
 function ChatArea({ pfp }) {
   const promptsEnd = useRef({});
@@ -73,6 +74,16 @@ function ChatArea({ pfp }) {
       mx={{ lg: 20 }}
       my={2}
       spacing={6}>
+      {!prompts.length && (
+        <Box
+          display='flex'
+          alignItems='center'
+          gap={2}
+          mt={4}>
+          <InfoOutlineIcon />
+          <Text fontWeight='medium'>Input a prompt or upload a PDF to get started.</Text>
+        </Box>
+      )}
       {prompts.map((prompt, index) => (
         <React.Fragment key={index}>
           <UserPrompt prompt={prompt} pfp={pfp} userPromptId={index} />

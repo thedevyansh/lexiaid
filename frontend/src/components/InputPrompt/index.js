@@ -56,9 +56,6 @@ function InputPrompt() {
     // NEED TO CHECK WHY DISPATCH ISN'T WORKING WHILE UPLOADING PDF !!!
     // dispatch(uploadPdfAndGenerateTtf({ file: formData }));
 
-    // Only to simulate the delay in receiving the response. Remove this later.
-    await new Promise(r => setTimeout(r, 2000));
-
     const response = await fetch(
       'http://localhost:5000/service/generate_ttf_from_pdf',
       {

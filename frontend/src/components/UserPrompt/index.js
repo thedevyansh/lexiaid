@@ -28,7 +28,9 @@ function UserPrompt({ prompt, pfp, userPromptId }) {
         {re.exec(prompt)[1] === 'pdf' ? (
           <Flex align='center'>
             <Icon as={AiOutlineFilePdf} boxSize={6} />
-            <Text ml={2}>{prompt}</Text>
+            <Text ml={2} fontStyle='italic'>
+              {prompt}
+            </Text>
           </Flex>
         ) : (
           prompt

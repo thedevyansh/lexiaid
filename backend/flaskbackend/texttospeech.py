@@ -2,36 +2,31 @@ import os
 import uuid
 from flask import Blueprint, g, session, request, Response, jsonify, send_file
 from flask_cors import cross_origin
+from google.cloud import storage
 
 
 bp = Blueprint("texttospeech", __name__, url_prefix="/texttospeech")
 
 
-def create_audio_url(username, userpromptid, audio_content):
-    try:
-        os.makedirs(username)
-    except FileExistsError:
-        pass
+def create_audio_url(audiocontent, username, userpromptid):
+    bucket_name = "audio-bucket-lexiaid"
+    file_substring = f"{username}/speech_{userpromptid}"
 
-    dir_path = os.path.abspath(username)
-    file_substring = f"speech_{userpromptid}"
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(bucket_name)
 
-    files = os.listdir(dir_path)
+    blobs = bucket.list_blobs()
 
-    for file in files:
-        if file_substring in file:
-            file_path = os.path.join(dir_path, file)
-            os.remove(file_path)
+    for blob in blobs:
+        if file_substring in blob.name:
+            blob.delete()
 
     identifier = uuid.uuid4()
-    with open(f"{username}/speech_{userpromptid}_{identifier}.mp3", "wb") as out:
-        out.write(audio_content)
+    filename = f"{username}/speech_{userpromptid}_{identifier}.mp3"
+    blob = bucket.blob(filename)
+    blob.upload_from_string(audiocontent, content_type="audio/mpeg")
 
-    host = request.host_url.rstrip("/")
-    url_prefix = bp.url_prefix
-    audio_url = (
-        f"{host}{url_prefix}/speech?speechid={userpromptid}&identifier={identifier}"
-    )
+    audio_url = f"https://storage.googleapis.com/{bucket_name}/{filename}"
 
     return audio_url
 
@@ -120,23 +115,6 @@ def generate_texttospeech():
                     }
                 )
 
-        audio_url = create_audio_url(username, userpromptid, response.audio_content)
+        audio_url = create_audio_url(response.audio_content, username, userpromptid)
 
         return jsonify({"audio_url": audio_url, "time_points": timepoints})
-
-
-@bp.route("/speech")
-@cross_origin(supports_credentials=True)
-def audio():
-    username = session.get("username", None)
-
-    if username is None:
-        g.user = None
-        return "Unauthorized", 401
-
-    speechid = request.args.get("speechid")
-    identifier = request.args.get("identifier")
-
-    return send_file(
-        f"../{username}/speech_{speechid}_{identifier}.mp3", mimetype="audio/mpeg"
-    )

@@ -12,13 +12,14 @@ import {
   Text,
   Divider,
   Center,
-} from "@chakra-ui/react";
-import { useDispatch } from "react-redux";
-import { BiHomeAlt2 } from "react-icons/bi";
-import { FiLogOut } from "react-icons/fi";
-import { Link } from "react-router-dom";
-import { logout } from "../../slices/userSlice";
-import AccessibilityBtn from "../AssessibilityBtn";
+} from '@chakra-ui/react';
+import { useDispatch } from 'react-redux';
+import { BiHomeAlt2 } from 'react-icons/bi';
+import { FiLogOut } from 'react-icons/fi';
+
+import { logout } from '../../slices/userSlice';
+import AccessibilityBtn from '../AssessibilityBtn';
+import LexReader from '../LexReader';
 
 const URI =
   !process.env.NODE_ENV || process.env.NODE_ENV === "development"
@@ -54,13 +55,8 @@ const SidebarContent = ({ handleLogout, user }) => (
       </Text>
     </VStack>
 
-    <Divider />
-    <Box flex="1" justifyContent="center">
-      <Center>
-        <Button colorScheme="green" variant="outline" width="200%">
-        <Link to='/phonics '>Phonics module</Link>
-        </Button>
-      </Center>
+    <Box flex='1' overflow='auto' mt={4}>
+      <LexReader />
     </Box>
 
     <Divider />
