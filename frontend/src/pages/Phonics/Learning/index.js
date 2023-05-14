@@ -8,7 +8,7 @@ import {
   CardHeader,
   IconButton,
 } from "@chakra-ui/react";
-import { BiRepeat, BiSkipPrevious, BiSkipNext } from "react-icons/bi";
+import { BiSkipPrevious, BiSkipNext, BiPlay } from "react-icons/bi";
 
 function index() {
   const words=["can","car","cap"]
@@ -33,10 +33,10 @@ function index() {
         boxShadow="xl"
         p="6"
         rounded="lg"
-        background="#f8fd89"
+        background="yellow.400"
       >
         <CardHeader>
-          <Heading size="4xl"> /k/</Heading>
+          <Heading size="4xl" textShadow="2xl"> /k/</Heading>
         </CardHeader>
       </Card>
       <Flex
@@ -65,7 +65,7 @@ function index() {
         <IconButton
           variant="outline"
           colorScheme="green"
-          aria-label="Replay"
+          aria-label="Previous"
           fontSize="3xl"
           borderRadius="100%"
           size="lg"
@@ -74,16 +74,16 @@ function index() {
         <IconButton
           variant="outline"
           colorScheme="green"
-          aria-label="Replay"
-          fontSize="3xl"
+          aria-label="Play"
+          fontSize="4xl"
           boxSize="20"
           rounded="100%"
-          icon={<BiRepeat />}
+          icon={<BiPlay />}
         />
         <IconButton
           variant="outline"
           colorScheme="green"
-          aria-label="Replay"
+          aria-label="Next"
           fontSize="3xl"
           borderRadius="100%"
           size="lg"

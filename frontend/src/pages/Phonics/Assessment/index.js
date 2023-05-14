@@ -11,7 +11,7 @@ import {
   Spinner
 } from "@chakra-ui/react";
 import {
-  BiRepeat,
+  BiPlay,
   BiSkipPrevious,
   BiSkipNext,
   BiVolumeFull,
@@ -31,11 +31,11 @@ export default function App() {
         <title>Phonics Assessment Area</title>
       </Helmet>
       <Text size="md" letterSpacing={1}>
-        MODULE 1 PRACTICE
+      PRACTICE
       </Text>
       <Heading>Basic Phonemes</Heading>
       <Text size="sm" marginTop="3">
-        Identify the words that contain the spoken phoneme
+        Identify the word that contains the spoken phoneme
       </Text>
       <Card
         align="center"
@@ -86,7 +86,7 @@ export default function App() {
         <IconButton
           variant="outline"
           colorScheme="green"
-          aria-label="Replay"
+          aria-label="Previous"
           fontSize="3xl"
           borderRadius="100%"
           size="lg"
@@ -95,16 +95,16 @@ export default function App() {
         <IconButton
           variant="outline"
           colorScheme="green"
-          aria-label="Replay"
-          fontSize="3xl"
+          aria-label="Play"
+          fontSize="4xl"
           boxSize="20"
           rounded="100%"
-          icon={<BiRepeat />}
+          icon={<BiPlay />}
         />
         <IconButton
           variant="outline"
           colorScheme="green"
-          aria-label="Replay"
+          aria-label="Next"
           fontSize="3xl"
           borderRadius="100%"
           size="lg"
