@@ -51,7 +51,6 @@ def get_module():
     chapter_id = int(request.args.get("chapter"))
     module_id = int(request.args.get("module")) 
     module_type=request.args.get("type")
-    print(module_type=="assessment")
     if module_type=="assessment":
         module_type="assessment_modules"
     else:

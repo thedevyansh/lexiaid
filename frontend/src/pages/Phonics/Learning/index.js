@@ -1,4 +1,4 @@
-import React from "react";
+import { React, useState, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import {
   Heading,
@@ -9,9 +9,29 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 import { BiSkipPrevious, BiSkipNext, BiPlay } from "react-icons/bi";
+import { getModuleDetails } from "../../../services/phonics";
+import { useSpeechSynthesis } from "react-speech-kit";
 
-function index() {
-  const words=["can","car","cap"]
+export default function Learning() {
+  const { speak } = useSpeechSynthesis();
+  const [learningData, setLearningData] = useState({});
+  const [currentWord, setCurrentWord] = useState("");
+  const getData = async () => {
+    const d = (
+      await getModuleDetails({ chapter: 0, module: 0, type: "learning" })
+    ).data;
+    console.log(d);
+    setLearningData(d);
+  };
+  useEffect(() => getData, []);
+  const onPlay = () => {
+    speak({ text: learningData?.phoneme });
+    const x = learningData?.words;
+    x.forEach((val) => {
+      speak({ text: `<phoneme alphabet='ipa'>${val}</phoneme>` })
+    });
+    setCurrentWord("");
+  };
   return (
     <Flex
       alignItems="center"
@@ -36,7 +56,10 @@ function index() {
         background="yellow.400"
       >
         <CardHeader>
-          <Heading size="4xl" textShadow="2xl"> /k/</Heading>
+          <Heading size="4xl" textShadow="2xl">
+            {" "}
+            {learningData?.grapheme}
+          </Heading>
         </CardHeader>
       </Card>
       <Flex
@@ -47,11 +70,18 @@ function index() {
         marginTop="3%"
         fontSize="3xl"
       >
-        {
-          words.map((key,idx)=> <Card padding="1% 4%" boxShadow="md" border="1px" borderColor="gray.200">
-          {key}
-        </Card>)
-        }
+        {learningData?.words?.map((val, idx) => (
+          <Card
+            padding="1% 4%"
+            boxShadow="md"
+            border="1px"
+            borderColor="gray.200"
+            key={idx}
+            background={currentWord === val ? "yellow.100" : "white"}
+          >
+            {val}
+          </Card>
+        ))}
       </Flex>
       <Flex
         flexDirection="row"
@@ -79,6 +109,7 @@ function index() {
           boxSize="20"
           rounded="100%"
           icon={<BiPlay />}
+          onClick={() => onPlay()}
         />
         <IconButton
           variant="outline"
@@ -93,5 +124,3 @@ function index() {
     </Flex>
   );
 }
-
-export default index;
