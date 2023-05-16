@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Avatar, Button, HStack } from '@chakra-ui/react';
+import { Avatar, Button, HStack, MenuButton } from '@chakra-ui/react';
 import { logout } from '../../../slices/userSlice';
 
 function RightMenu() {
