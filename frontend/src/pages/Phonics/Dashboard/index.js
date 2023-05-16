@@ -81,7 +81,7 @@ export default function App() {
             <Heading size="md">{chapters[currentChapter]?.name}</Heading>
           </CardHeader>
           <CardBody>
-            <Progress value={34} colorScheme="yellow"></Progress>
+            <Progress value={chapterProgress} colorScheme="yellow"></Progress>
             <Text>{chapterProgress + "%"}</Text>
           </CardBody>
           <CardFooter>

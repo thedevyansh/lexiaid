@@ -17,7 +17,7 @@ import {
 } from "react-icons/bi";
 import { useLocation, Link } from "react-router-dom";
 import { useSpeechSynthesis } from "react-speech-kit";
-import { getModuleDetails } from "../../../services/phonics";
+import { getModuleDetails,updateProgress } from "../../../services/phonics";
 
 export default function App() {
   const location = useLocation();
@@ -50,6 +50,11 @@ export default function App() {
     }
     console.log(nextLink);
     setAssessmentData(d);
+
+    //update the progress
+    const p=await updateProgress({
+      module: parseInt(md)
+    });
   };
   useEffect(() => {
     let ch = location?.state?.chapter;
@@ -76,7 +81,7 @@ export default function App() {
       <Text size="md" letterSpacing={1}>
         PRACTICE
       </Text>
-      <Heading>Basic Phonemes</Heading>
+      <Heading>Basic Phonemes-II</Heading>
       <Text size="sm" marginTop="3">
         Identify the word that contains the spoken phoneme
       </Text>

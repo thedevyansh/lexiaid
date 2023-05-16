@@ -14,3 +14,7 @@ export const getModuleDetails = request => {
 export const getChapters = request => {
   return instance.get('/phonics/get_chapters');
 };
+
+export const updateProgress = request => {
+    return instance.post('/phonics/update_progress', request);
+  };

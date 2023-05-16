@@ -56,7 +56,7 @@ export default function Learning() {
       <Text size="md" letterSpacing={1}>
         MODULE 1
       </Text>
-      <Heading>Basic Phonemes</Heading>
+      <Heading>Basic Phonemes-II</Heading>
       <Card
         align="center"
         marginTop="5%"
