@@ -1,5 +1,5 @@
 import json, os
-from flask import Blueprint, abort, request, session, g, jsonify
+from flask import Blueprint, abort, request, session, g, jsonify, send_file
 from flask_cors import cross_origin
 from flaskbackend.db import get_db_client
 from werkzeug.utils import secure_filename
@@ -87,7 +87,7 @@ def new_ttf():
     ip_text = form_data["user_prompt"]
 
     op_data = ttf.process(
-        ip_text
+        ip_text, username
     )  # TO-DO: When deployed, upload images (returned as base64 to CDN here itself)
 
     if op_data["error"]["code"] != 200:
@@ -133,7 +133,7 @@ def upload_file():
         user = users_collection.find_one({"username": username})
 
         op_data = ttf.process(
-            ip_text
+            ip_text, username
         )  # TO-DO: When deployed, upload images (returned as base64 to CDN here itself)
 
         if op_data["error"]["code"] != 200:
@@ -153,3 +153,18 @@ def upload_file():
 
     else:
         return {"error": "File not allowed"}
+    
+
+@bp.route("/sdimage")
+@cross_origin(supports_credentials=True)
+def sdimage():
+    username = session.get("username", None)
+
+    if username is None:
+        g.user = None
+        return "Unauthorized", 401
+
+    identifier = request.args.get("identifier")
+
+    return send_file(
+        f"../{username}/{identifier}.png", mimetype="image/png")

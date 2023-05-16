@@ -77,8 +77,6 @@ function InputPrompt() {
       setPrompt('');
       setInputDisabled(true);
 
-      // Only to simulate the delay in receiving the response. Remove this later.
-      await new Promise(r => setTimeout(r, 2000));
       dispatch(generateTtf({ user_prompt: trimmedPrompt })); // use ttf/generateTtf/fulfilled and rejected here
 
       setInputDisabled(false);
