@@ -11,24 +11,35 @@ import {
 import { BiSkipPrevious, BiSkipNext, BiPlay } from "react-icons/bi";
 import { getModuleDetails } from "../../../services/phonics";
 import { useSpeechSynthesis } from "react-speech-kit";
+import { useLocation,Link } from "react-router-dom";
 
 export default function Learning() {
+  const location = useLocation();
+  /* const { module,chapter } = location?.state; */
   const { speak } = useSpeechSynthesis();
   const [learningData, setLearningData] = useState({});
   const [currentWord, setCurrentWord] = useState("");
-  const getData = async () => {
+  const getData = async (ch,md) => {
     const d = (
-      await getModuleDetails({ chapter: 0, module: 0, type: "learning" })
+      await getModuleDetails({
+        chapter: ch,
+        module: md,
+        type: "learning",
+      })
     ).data;
     console.log(d);
     setLearningData(d);
   };
-  useEffect(() => getData, []);
+  useEffect(() => {
+    let ch=location?.state?.chapter;
+    let md=location?.state?.module;
+    getData(ch,md);
+  }, [location]);
   const onPlay = () => {
     speak({ text: learningData?.phoneme });
     const x = learningData?.words;
     x.forEach((val) => {
-      speak({ text: `<phoneme alphabet='ipa'>${val}</phoneme>` })
+      speak({ text: `<phoneme alphabet='ipa'>${val}</phoneme>` });
     });
     setCurrentWord("");
   };
@@ -111,6 +122,10 @@ export default function Learning() {
           icon={<BiPlay />}
           onClick={() => onPlay()}
         />
+        <Link to={{
+                pathname: "/phonics/assessment",
+                state: { chapter: 1, module: 0 },
+              }}>
         <IconButton
           variant="outline"
           colorScheme="green"
@@ -119,7 +134,7 @@ export default function Learning() {
           borderRadius="100%"
           size="lg"
           icon={<BiSkipNext />}
-        />
+        /></Link>
       </Flex>
     </Flex>
   );

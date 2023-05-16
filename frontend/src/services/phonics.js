@@ -11,3 +11,6 @@ const instance = axios.create({
 export const getModuleDetails = request => {
   return instance.get('/phonics/get_module', {params:request});
 };
+export const getChapters = request => {
+  return instance.get('/phonics/get_chapters');
+};

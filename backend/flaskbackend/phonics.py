@@ -25,12 +25,12 @@ def get_chapters():
     chapter_progress = phonics_progress_collection.find({"user_id": user["_id"]})[0]["chapter_progress"]
 
     phonics_content_db = client["phonics_content"]
-    chapters_collection = phonics_content_db["chapters"].find()
+    chapters_collection = phonics_content_db["chapters"].find().sort("c_id")
 
     chapters = []
     for document in chapters_collection:
         del document["_id"]
-        chapters.insert(0, document)
+        chapters.append(document)
 
     response_obj={
         "all_chapters":chapters, 
