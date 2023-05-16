@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React, { useState, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import {
   Button,
@@ -8,7 +8,6 @@ import {
   Card,
   CardHeader,
   IconButton,
-  Spinner
 } from "@chakra-ui/react";
 import {
   BiPlay,
@@ -16,10 +15,54 @@ import {
   BiSkipNext,
   BiVolumeFull,
 } from "react-icons/bi";
+import { useLocation, Link } from "react-router-dom";
+import { useSpeechSynthesis } from "react-speech-kit";
+import { getModuleDetails } from "../../../services/phonics";
 
 export default function App() {
-  const words = ["can", "car", "cap"];
-  const [isSoundActive, handleSound]=useState(false);
+  const location = useLocation();
+  const {chapter,module}=location?.state;
+  const [nextLink,setNextLink]=useState({})
+  /* const { module,chapter } = location?.state; */
+  const { speak, speaking } = useSpeechSynthesis();
+  const [assessmentData, setAssessmentData] = useState({});
+  const [isAnswered, setIsAnswered] = useState(-1);
+  const getData = async (ch, md) => {
+    const d = (
+      await getModuleDetails({
+        chapter: ch,
+        module: md,
+        type: "assessment",
+      })
+    ).data;
+    console.log(d);
+    if(ch==1 && md==0){
+      setNextLink({
+        pathname: "/phonics/assessment",
+        state: { chapter: ch, module: md+1 },
+      })
+    }
+    else{
+      setNextLink({
+        pathname: "/phonics/learning",
+        state: { chapter: ch, module: md+1 },
+      })
+    }
+    console.log(nextLink);
+    setAssessmentData(d);
+  };
+  useEffect(() => {
+    let ch = location?.state?.chapter;
+    let md = location?.state?.module;
+    getData(ch, md);
+  }, [location]);
+  const onPlay = () => {
+    speak({ text: assessmentData?.phoneme });
+  };
+  const checkAns = (idx) => {
+    setIsAnswered(parseInt(idx));
+    console.log(idx)
+  };
   return (
     <Flex
       alignItems="center"
@@ -31,7 +74,7 @@ export default function App() {
         <title>Phonics Assessment Area</title>
       </Helmet>
       <Text size="md" letterSpacing={1}>
-      PRACTICE
+        PRACTICE
       </Text>
       <Heading>Basic Phonemes</Heading>
       <Text size="sm" marginTop="3">
@@ -44,7 +87,7 @@ export default function App() {
         boxShadow="xl"
         p="6"
         rounded="100"
-        backgroundColor={isSoundActive?"orange.300":"orange.100"}
+        backgroundColor={speaking ? "orange.300" : "orange.100"}
         border="2px"
         borderColor="yellow.200"
       >
@@ -60,17 +103,29 @@ export default function App() {
         justifyContent="space-between"
         wrap="nowrap"
         marginTop="3%"
-        
       >
-        {words.map((key, idx) => (
+        {assessmentData?.options?.map((val, idx) => (
           <Button
             padding="5%"
             boxShadow="md"
             border="1px"
             borderColor="gray.200"
             fontSize="3xl"
+            key={idx}
+            value={idx}
+            onClick={(e) => checkAns(e?.target?.value)}
+            isDisabled={isAnswered >= 0}
+            background={
+              isAnswered >= 0
+                ? idx === assessmentData?.ans
+                  ? "green.100"
+                  : idx === isAnswered && idx !== assessmentData?.ans
+                  ? "red.100"
+                  : "white"
+                : "white"
+            }
           >
-            {key}
+            {val}
           </Button>
         ))}
       </Flex>
@@ -100,7 +155,9 @@ export default function App() {
           boxSize="20"
           rounded="100%"
           icon={<BiPlay />}
+          onClick={() => onPlay()}
         />
+        <Link to={nextLink}>
         <IconButton
           variant="outline"
           colorScheme="green"
@@ -110,6 +167,7 @@ export default function App() {
           size="lg"
           icon={<BiSkipNext />}
         />
+        </Link>
       </Flex>
     </Flex>
   );
