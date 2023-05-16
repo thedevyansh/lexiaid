@@ -21,7 +21,6 @@ import { getModuleDetails,updateProgress } from "../../../services/phonics";
 
 export default function App() {
   const location = useLocation();
-  const {chapter,module}=location?.state;
   const [nextLink,setNextLink]=useState({})
   /* const { module,chapter } = location?.state; */
   const { speak, speaking } = useSpeechSynthesis();
@@ -162,7 +161,7 @@ export default function App() {
           icon={<BiPlay />}
           onClick={() => onPlay()}
         />
-        <Link to={nextLink}>
+        <Link to={nextLink} state={nextLink}>
         <IconButton
           variant="outline"
           colorScheme="green"
@@ -171,6 +170,7 @@ export default function App() {
           borderRadius="100%"
           size="lg"
           icon={<BiSkipNext />}
+          onClick={()=>setIsAnswered(-1)}
         />
         </Link>
       </Flex>
